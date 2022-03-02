@@ -1,0 +1,24 @@
+name: Post content to LighthouseCMS
+on:
+  push:
+    branches: [master]
+jobs:
+  send_content:
+    name: Find and post content to LighthouseCMS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Find files and send them
+        run: |
+          git diff --name-only ${{ github.event.before }}..${{ github.event.after }} > changed-files.txt
+          for n in `cat changed-files.txt`; do
+            echo "Posting $n to LighthouseCMS";
+            curl -i \
+              -X POST \
+              -H "Content-Type: multipart/form-data" \
+              -H "token: [github_token]" \
+              -F "data=@$n" \
+              -F "filename=$n" \
+              https://httpstat.us/200;
+          done
