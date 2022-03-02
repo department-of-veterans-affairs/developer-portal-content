@@ -11,6 +11,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Find files and send them
         run: |
+          git log
           git diff --name-only ${{ github.event.before }}..${{ github.event.after }} > changed-files.txt
           for n in `cat changed-files.txt`; do
             echo "Posting $n to LighthouseCMS";
