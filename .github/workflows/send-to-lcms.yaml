@@ -13,8 +13,9 @@ jobs:
           fetch-depth: 0
       - name: Find files and send them
         run: |
-          git log
+          # Get list of changed files
           git diff --name-only ${{ github.event.before }}..${{ github.event.after }} > changed-files.txt
+          # Loop over changed files and post them to LighthouseCMS
           for n in `cat changed-files.txt`; do
             echo "Posting $n to LighthouseCMS";
             curl -i \
