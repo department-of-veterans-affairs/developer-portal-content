@@ -15,8 +15,8 @@ jobs:
         run: |
           # Get list of changed files
           git diff --name-only ${{ github.event.before }}..${{ github.event.after }} > changed-files.txt
-          # Loop over changed files and post them to LighthouseCMS
-          for n in `cat changed-files.txt`; do
+          # Loop over changed files (skipping empty.md files) and post them to LighthouseCMS
+          for n in `cat changed-files.txt | grep -v empty.md`; do
             echo "Posting $n to LighthouseCMS";
             curl -i \
               -X POST \
