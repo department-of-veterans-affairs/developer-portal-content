@@ -1,4 +1,9 @@
 # Developer Portal Content
+
+```diff
+! This is still in active development and not yet a method to update `developer-portal` content.
+```
+
 ## What is it?
 
 This repo acts as a source for content changes for release notes for APIs on the [Lighthouse Developer Portal](https://developer.va.gov).
