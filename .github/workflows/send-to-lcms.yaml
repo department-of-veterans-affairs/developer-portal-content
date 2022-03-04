@@ -2,6 +2,8 @@ name: Post content to LighthouseCMS
 on:
   push:
     branches: [main]
+    paths:
+      - 'content/**'
 jobs:
   send_content:
     name: Find and post content to LighthouseCMS

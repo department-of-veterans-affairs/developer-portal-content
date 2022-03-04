@@ -1,7 +1,7 @@
 # Developer Portal Content
 
 ```diff
-! This is still in active development and not yet a method to update `developer-portal` content.
+! This is still in active development and not yet a method to update the content on the developer portal.
 ```
 
 ## What is it?
