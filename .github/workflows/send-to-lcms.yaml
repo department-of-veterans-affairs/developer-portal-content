@@ -4,27 +4,48 @@ on:
     branches: [main]
     paths:
       - 'content/**'
+  pull_request:
+    branches: [main]
+
 jobs:
   send_content:
     name: Find and post content to LighthouseCMS
     runs-on: ubuntu-latest
     steps:
+      - id: get_target_environment
+        name: Determine Target Environment
+        run: |
+          TARGET_ENVIRONMENT="development"
+          if [ "${{ github.event.after }}" != "" ]; then
+            TARGET_ENVIRONMENT="production"
+          fi
+          echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Find files and send them
         run: |
+          # Set LighthouseCMS Target Environment
+          LCMS_HOST="dev-developer.va.gov"
+          if [ "${{ steps.get_target_environment.outputs.target_environment }}" == "production" ]; then
+            LCMS_HOST="developer.va.gov"
+          fi
           # Get list of changed files
           git diff --name-only ${{ github.event.before }}..${{ github.event.after }} > changed-files.txt
-          # Loop over changed files (skipping empty.md files) and post them to LighthouseCMS
-          for n in `cat changed-files.txt | grep -v empty.md`; do
+          # Loop over changed files and post them to LighthouseCMS
+          for n in `cat changed-files.txt`; do
             echo "Posting $n to LighthouseCMS";
-            curl -i \
+            DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`
+            echo $DATE_STRING
+            CONTENT_STRING=`cat $n`
+            TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`
+            curl -i -f \
               -X POST \
-              -H "Content-Type: multipart/form-data" \
+              -H "Content-Type: multipart/x-www-form-urlencoded" \
+              -H "Accept: application/json" \
               -H "token: [github_token]" \
-              -F "data=@$n" \
-              -F "filename=$n" \
-              https://httpstat.us/200;
+              -F "date=$DATE_STRING" \
+              --data-urlencode "content=$CONTENT_STRING" \
+              https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
           done
