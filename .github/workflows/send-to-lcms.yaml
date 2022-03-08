@@ -55,6 +55,7 @@ jobs:
             echo $DATE_STRING
             CONTENT_STRING=`cat $n`
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`
+            echo "Target URL: https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
             curl -i -f \
               -X POST \
               -H "Content-Type: multipart/x-www-form-urlencoded" \
