@@ -34,7 +34,9 @@ jobs:
           BEFORE="${{ github.event.before }}"
           AFTER="${{ github.event.after }}"
           git diff --name-only $BEFORE..$AFTER > changed-files.txt
-      - name: Find files and send them
+      - id: upload_content
+        name: Find files and send them
+        continue-on-error: true
         run: |
           # Set LighthouseCMS Target Environment
           LCMS_HOST="dev-developer.va.gov"
@@ -48,8 +50,11 @@ jobs:
               echo $f >> changed-files.txt
             done
           fi
+          touch output.txt
+          echo "Expected files changes:"
+          cat changed-files.txt
           # Loop over changed files and post them to LighthouseCMS
-          for n in `cat changed-files.txt`; do
+          for n in `cat changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`
             echo $DATE_STRING
@@ -64,4 +69,18 @@ jobs:
               -d "date=$DATE_STRING" \
               --data-urlencode "content=$CONTENT_STRING" \
               https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
+            echo $n >> output.txt
           done
+      - name: Comment on PR
+        if: |
+          steps.get_target_environment.outputs.target_environment == "development" &&
+          steps.upload_content.outcome == 'success'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/release-notes/).'
+            })
