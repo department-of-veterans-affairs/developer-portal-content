@@ -73,8 +73,7 @@ jobs:
           done
       - name: Comment on PR
         if: |
-          steps.get_target_environment.outputs.target_environment == 'development' &&
-          steps.upload_content.outcome == 'success'
+          steps.get_target_environment.outputs.target_environment == 'development'
         uses: actions/github-script@v6
         with:
           script: |
