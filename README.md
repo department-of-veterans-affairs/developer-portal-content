@@ -13,4 +13,5 @@ This repo acts as a source for content changes for release notes for APIs on the
 
 1. New content is added in a folder structure that matches an expected pattern per each API.
 2. A pull request gets created and reviewed.
-3. Upon merge to `main` a GitHub Action will push the content to the Lighthouse Consumer Management Service which will update the content pulled into the developer portal.
+3. Pull requests (and update commits to PRs) pushes proposed changes to dev to allow visual testing.
+4. Upon merge to `main` a GitHub Action will push the content to the Lighthouse Consumer Management Service which will update the content pulled into the developer portal.
