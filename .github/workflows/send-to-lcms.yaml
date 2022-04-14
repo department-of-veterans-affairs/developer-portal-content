@@ -57,7 +57,9 @@ jobs:
   send_content_to_development:
     name: Send content to development LighthouseCMS
     needs: [gather_content]
-    environment: development
+    environment: 
+      name: development
+      url: https://dev-developer.va.gov
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'development'
     steps:
@@ -78,7 +80,7 @@ jobs:
             echo $DATE_STRING
             CONTENT_STRING=`cat $n`
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`
-            echo "Target URL: https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
+            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
             curl -i -f \
               -X POST \
               -H "Content-Type: multipart/x-www-form-urlencoded" \
@@ -104,7 +106,9 @@ jobs:
   send_content_to_production:
     name: Send content to production LighthouseCMS
     needs: [gather_content]
-    environment: production
+    environment: 
+      name: production
+      url: https://developer.va.gov
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'production'
     steps:
@@ -125,7 +129,7 @@ jobs:
             echo $DATE_STRING
             CONTENT_STRING=`cat $n`
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`
-            echo "Target URL: https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
+            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
             curl -i -f \
               -X POST \
               -H "Content-Type: multipart/x-www-form-urlencoded" \
