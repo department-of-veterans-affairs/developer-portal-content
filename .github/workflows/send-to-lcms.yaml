@@ -21,6 +21,8 @@ jobs:
           if [ "${{ github.event.after }}" != "" ]; then
             TARGET_ENVIRONMENT="production"
           fi
+          echo ${{ github.event.after }}
+          echo $TARGET_ENVIRONMENT
           echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
       - name: Checkout
         uses: actions/checkout@v2
