@@ -22,7 +22,6 @@ jobs:
           if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             TARGET_ENVIRONMENT="production"
           fi
-          echo ${{ github.event.pull_request.merged }}
           echo $TARGET_ENVIRONMENT
           echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
       - name: Checkout
@@ -80,7 +79,6 @@ jobs:
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
           touch output.txt;
-          ls -la changed-files;
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
@@ -133,7 +131,6 @@ jobs:
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
           touch output.txt;
-          ls -la changed-files;
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
