@@ -1,24 +1,28 @@
 name: Post content to LighthouseCMS
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'content/**'
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
     branches: [main]
 
 jobs:
-  send_content:
-    name: Find and post content to LighthouseCMS
+  gather_content:
+    name: Gather the changed content
     runs-on: ubuntu-latest
+    outputs:
+      target_environment: ${{ steps.get_target_environment.outputs.target_environment }}
     steps:
       - id: get_target_environment
         name: Determine Target Environment
         run: |
           TARGET_ENVIRONMENT="development"
-          if [ "${{ github.event.after }}" != "" ]; then
+          if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             TARGET_ENVIRONMENT="production"
           fi
+          echo $TARGET_ENVIRONMENT
           echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,7 +30,7 @@ jobs:
           fetch-depth: 0
       - id: pr_files
         if: steps.get_target_environment.outputs.target_environment == 'development'
-        uses: jitterbit/get-changed-files@v1
+        uses: Ana06/get-changed-files@v1.2
       - id: push_files
         if: steps.get_target_environment.outputs.target_environment == 'production'
         run: |
@@ -38,11 +42,6 @@ jobs:
         name: Find files and send them
         continue-on-error: true
         run: |
-          # Set LighthouseCMS Target Environment
-          LCMS_HOST="dev-developer.va.gov"
-          if [ "${{ steps.get_target_environment.outputs.target_environment }}" == "production" ]; then
-            LCMS_HOST="developer.va.gov"
-          fi
           # If it's a PR change from a space delimited list to one file per line
           if [ "${{ steps.pr_files.outputs.added_modified }}" != "" ]; then
             touch changed-files.txt
@@ -50,30 +49,56 @@ jobs:
               echo $f >> changed-files.txt
             done
           fi
-          touch output.txt
           echo "Expected files changes:"
           cat changed-files.txt
-          # Loop over changed files and post them to LighthouseCMS
-          for n in `cat changed-files.txt | grep content/`; do
+      - name: Save changed files list
+        uses: actions/upload-artifact@v1
+        with:
+          name: changed-files
+          path: changed-files.txt
+  send_content_to_development:
+    name: Send content to development LighthouseCMS
+    needs: [gather_content]
+    environment: 
+      name: development
+      url: https://dev-developer.va.gov
+    runs-on: ubuntu-latest
+    if: needs.gather_content.outputs.target_environment == 'development'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get file list
+        uses: actions/download-artifact@v1
+        with:
+          name: changed-files
+      - name: Send content to development
+        env:
+          LCMS_HOST: 'dev-api.va.gov'
+          LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
+        run:
+          touch output.txt;
+          for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
-            DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`
-            echo $DATE_STRING
-            CONTENT_STRING=`cat $n`
-            TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`
-            echo "Target URL: https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
+            DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+            echo $DATE_STRING;
+            CONTENT_STRING=`cat $n`;
+            TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
+            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl -i -f \
               -X POST \
-              -H "Content-Type: multipart/x-www-form-urlencoded" \
-              -H "Accept: application/json" \
-              -H "token: [github_token]" \
+              -H "Content-Type:multipart/x-www-form-urlencoded" \
+              -H "Accept:application/json" \
+              -H "apikey:$LCMS_APIKEY" \
               -d "date=$DATE_STRING" \
               --data-urlencode "content=$CONTENT_STRING" \
               https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
-            echo $n >> output.txt
-          done
+            echo $n >> output.txt;
+          done;
+          echo 'Curl outputs:';
+          cat output.txt;
       - name: Comment on PR
-        if: |
-          steps.get_target_environment.outputs.target_environment == 'development'
         uses: actions/github-script@v6
         with:
           script: |
@@ -83,3 +108,46 @@ jobs:
               repo: context.repo.repo,
               body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/release-notes/).'
             })
+  send_content_to_production:
+    name: Send content to production LighthouseCMS
+    needs: [gather_content]
+    environment: 
+      name: production
+      url: https://developer.va.gov
+    runs-on: ubuntu-latest
+    if: needs.gather_content.outputs.target_environment == 'production'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get file list
+        uses: actions/download-artifact@v1
+        with:
+          name: changed-files
+      - name: Send content to production
+        env:
+          LCMS_HOST: 'api.va.gov'
+          LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
+        run:
+          touch output.txt;
+          for n in `cat changed-files/changed-files.txt | grep content/`; do
+            echo "Posting $n to LighthouseCMS";
+            DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+            echo $DATE_STRING;
+            CONTENT_STRING=`cat $n`;
+            TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
+            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes";
+            curl -i -f \
+              -X POST \
+              -H "Content-Type:multipart/x-www-form-urlencoded" \
+              -H "Accept:application/json" \
+              -H "apikey:$LCMS_APIKEY" \
+              -d "date=$DATE_STRING" \
+              --data-urlencode "content=$CONTENT_STRING" \
+              https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
+            echo $n >> output.txt;
+          done;
+          echo 'Curl outputs:';
+          cat output.txt;
+
