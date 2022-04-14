@@ -1,10 +1,11 @@
 name: Post content to LighthouseCMS
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'content/**'
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - closed
     branches: [main]
 
 jobs:
@@ -18,10 +19,10 @@ jobs:
         name: Determine Target Environment
         run: |
           TARGET_ENVIRONMENT="development"
-          if [ "${{ github.event.after }}" != "" ]; then
+          if [ "${{ github.event.pull_request.merged }}" == "true" ]; then
             TARGET_ENVIRONMENT="production"
           fi
-          echo ${{ github.event.after }}
+          echo ${{ github.event.pull_request.merged }}
           echo $TARGET_ENVIRONMENT
           echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
       - name: Checkout
