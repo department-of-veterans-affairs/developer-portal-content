@@ -66,6 +66,10 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'development'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get file list
         uses: actions/download-artifact@v1
         with:
@@ -75,9 +79,9 @@ jobs:
           LCMS_HOST: 'dev-developer.va.gov'
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
-          # Loop over changed files and post them to LighthouseCMS
           touch output.txt
-          for n in `cat changed-files.txt | grep content/`; do
+          ls -la changed-files
+          for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`
             echo $DATE_STRING
@@ -115,6 +119,10 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'production'
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Get file list
         uses: actions/download-artifact@v1
         with:
@@ -124,9 +132,8 @@ jobs:
           LCMS_HOST: 'developer.va.gov'
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
-          # Loop over changed files and post them to LighthouseCMS
           touch output.txt
-          for n in `cat changed-files.txt | grep content/`; do
+          for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`
             echo $DATE_STRING
