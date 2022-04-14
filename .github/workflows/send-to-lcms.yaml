@@ -83,9 +83,9 @@ jobs:
             echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
             curl -i -f \
               -X POST \
-              -H "Content-Type: multipart/x-www-form-urlencoded" \
-              -H "Accept: application/json" \
-              -H "apikey: $LCMS_APIKEY" \
+              -H "Content-Type:multipart/x-www-form-urlencoded" \
+              -H "Accept:application/json" \
+              -H "apikey:$LCMS_APIKEY" \
               -d "date=$DATE_STRING" \
               --data-urlencode "content=$CONTENT_STRING" \
               https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
@@ -132,9 +132,9 @@ jobs:
             echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes"
             curl -i -f \
               -X POST \
-              -H "Content-Type: multipart/x-www-form-urlencoded" \
-              -H "Accept: application/json" \
-              -H "apikey: $LCMS_APIKEY" \
+              -H "Content-Type:multipart/x-www-form-urlencoded" \
+              -H "Accept:application/json" \
+              -H "apikey:$LCMS_APIKEY" \
               -d "date=$DATE_STRING" \
               --data-urlencode "content=$CONTENT_STRING" \
               https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
