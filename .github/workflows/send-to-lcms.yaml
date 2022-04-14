@@ -10,7 +10,7 @@ on:
 
 jobs:
   gather_content:
-    name: Find and post content to LighthouseCMS
+    name: Gather the changed content
     runs-on: ubuntu-latest
     outputs:
       target_environment: ${{ steps.get_target_environment.outputs.target_environment }}
