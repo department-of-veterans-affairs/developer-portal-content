@@ -82,7 +82,7 @@ jobs:
               --request POST
               --header 'Content-Type:application/json'
               --header "apikey:$LCMS_APIKEY"
-              --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
+              --data-urlencode "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
               https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
             echo $n >> output.txt;
           done;
