@@ -78,13 +78,11 @@ jobs:
             CONTENT_STRING=`cat $n`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
             echo "Target URL https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            curl -v -i -f 
-              -X POST 
-              -H "Content-Type:application/json" 
-              -H "Accept:application/json" 
-              -H "apikey:$LCMS_APIKEY" 
-              -d "date=$DATE_STRING" 
-              --data-urlencode "content=$CONTENT_STRING" 
+            curl -v 
+              --request POST
+              --header 'Content-Type:application/json'
+              --header "apikey:$LCMS_APIKEY"
+              --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
               https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
             echo $n >> output.txt;
           done;
