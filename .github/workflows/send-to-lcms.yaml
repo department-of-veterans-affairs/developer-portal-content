@@ -77,7 +77,7 @@ jobs:
             echo $DATE_STRING;
             CONTENT_STRING=`cat $n`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
-            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo "Target URL https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl -v -i -f 
               -X POST 
               -H "Content-Type:multipart/x-www-form-urlencoded" 
@@ -85,7 +85,7 @@ jobs:
               -H "apikey:$LCMS_APIKEY" 
               -d "date=$DATE_STRING" 
               --data-urlencode "content=$CONTENT_STRING" 
-              https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
+              https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
             echo $n >> output.txt;
           done;
           echo 'Curl outputs:';
@@ -129,7 +129,7 @@ jobs:
             echo $DATE_STRING;
             CONTENT_STRING=`cat $n`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
-            echo "Target URL https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo "Target URL https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl -i -f \
               -X POST \
               -H "Content-Type:multipart/x-www-form-urlencoded" \
@@ -137,7 +137,7 @@ jobs:
               -H "apikey:$LCMS_APIKEY" \
               -d "date=$DATE_STRING" \
               --data-urlencode "content=$CONTENT_STRING" \
-              https://$LCMS_HOST/platform-backend/v0/providers/$TARGET_API/release-notes;
+              https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
             echo $n >> output.txt;
           done;
           echo 'Curl outputs:';
