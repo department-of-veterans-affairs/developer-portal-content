@@ -56,6 +56,7 @@ jobs:
           path: changed-files.txt
   send_content_to_development:
     name: Send content to development LighthouseCMS
+    needs: [gather_content]
     environment: development
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'development'
@@ -102,6 +103,7 @@ jobs:
             })
   send_content_to_production:
     name: Send content to production LighthouseCMS
+    needs: [gather_content]
     environment: production
     runs-on: ubuntu-latest
     if: needs.gather_content.outputs.target_environment == 'production'
