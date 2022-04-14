@@ -75,7 +75,7 @@ jobs:
           name: changed-files
       - name: Send content to development
         env:
-          LCMS_HOST: 'dev-developer.va.gov'
+          LCMS_HOST: 'dev-api.va.gov'
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
           touch output.txt;
@@ -127,7 +127,7 @@ jobs:
           name: changed-files
       - name: Send content to production
         env:
-          LCMS_HOST: 'developer.va.gov'
+          LCMS_HOST: 'api.va.gov'
           LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
         run:
           touch output.txt;
