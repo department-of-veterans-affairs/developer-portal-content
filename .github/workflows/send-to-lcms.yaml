@@ -29,15 +29,7 @@ jobs:
         with:
           fetch-depth: 0
       - id: pr_files
-        if: steps.get_target_environment.outputs.target_environment == 'development'
         uses: Ana06/get-changed-files@v1.2
-      - id: push_files
-        if: steps.get_target_environment.outputs.target_environment == 'production'
-        run: |
-          # Get list of changed files from a merge to main
-          BEFORE="${{ github.event.before }}"
-          AFTER="${{ github.event.after }}"
-          git diff --name-only $BEFORE..$AFTER > changed-files.txt
       - id: upload_content
         name: Find files and send them
         continue-on-error: true
