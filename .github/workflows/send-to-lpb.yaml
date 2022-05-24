@@ -72,6 +72,7 @@ jobs:
         run:
           echo $LPB_RSA_TOKEN > ./rsa.pem;
           ls -la;
+          wc -l ./rsa.pem;
           node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST;
           BEARER_TOKEN=`cat ./bearer.token`;
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
