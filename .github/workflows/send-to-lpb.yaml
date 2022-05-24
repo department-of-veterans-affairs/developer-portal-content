@@ -70,7 +70,7 @@ jobs:
           LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
           LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
         run:
-          echo $LBP_RSA_TOKEN > ./rsa.token;
+          echo $LPB_RSA_TOKEN > ./rsa.token;
           ls -la;
           node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.token $LPB_HOST;
           BEARER_TOKEN=`cat ./bearer.token`;
