@@ -26,8 +26,8 @@ const data = {
     'scope': 'provider.read provider.write',
 };
 
-axios.post(bearerEndpoint, URLSearchParams(data), {headers: headers})
+axios.post(bearerEndpoint, new URLSearchParams(data).toString(), {headers: headers})
     .then(response => {
         console.log('Bearer token: ', response.data.access_token);
-        fs.writeFileSync('./bearer.token', reponse.data.access_token);
+        fs.writeFileSync('./bearer.token', response.data.access_token);
     });
