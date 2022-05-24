@@ -71,6 +71,7 @@ jobs:
           LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
         run:
           echo $LBP_RSA_TOKEN > ./rsa.token;
+          ls -la;
           node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.token $LPB_HOST;
           BEARER_TOKEN=`cat ./bearer.token`;
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
