@@ -1,4 +1,4 @@
-name: Post content to LighthouseCMS
+name: Post content to Lighthouse Backend Project (LPB)
 on:
   pull_request:
     types:
@@ -61,14 +61,26 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: NPM install
+        run: npm ci
+      - id: get_bearer_token
+        name: Get Bearer Token
+        env:
+          LPB_HOST: 'dev-api.va.gov'
+          LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
+          LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
+        run:
+          echo $LBP_RSA_TOKEN > ./rsa.token
+          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.token $LPB_HOST
+          BEARER_TOKEN=`cat ./bearer.token`
+          echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV
       - name: Get file list
         uses: actions/download-artifact@v1
         with:
           name: changed-files
       - name: Send content to development
         env:
-          LCMS_HOST: 'dev-api.va.gov'
-          LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
+          LPB_HOST: 'dev-api.va.gov'
         run:
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
@@ -76,13 +88,13 @@ jobs:
             echo $DATE_STRING;
             CONTENT_STRING=`cat $n | node -p 'encodeURIComponent(require("fs").readFileSync(0))'`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
-            echo "Target URL https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl
               --request POST
               --header 'Content-Type:application/json'
-              --header "apikey:$LCMS_APIKEY"
+              --header "Authorization:Bearer ${{ env.bearer_token }}"
               --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
-              https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
+              https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
           done;
       - name: Comment on PR
         uses: actions/github-script@v6
@@ -113,8 +125,8 @@ jobs:
           name: changed-files
       - name: Send content to production
         env:
-          LCMS_HOST: 'api.va.gov'
-          LCMS_APIKEY: ${{ secrets.LCMS_APIKEY }}
+          LPB_HOST: 'api.va.gov'
+          LPB_RSA_SECRET: ${{ secrets.LPB_RSA_SECRET }}
         run:
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
@@ -122,11 +134,11 @@ jobs:
             echo $DATE_STRING;
             CONTENT_STRING=`cat $n | node -p 'encodeURIComponent(require("fs").readFileSync(0))'`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
-            echo "Target URL https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl
               --request POST
               --header 'Content-Type:application/json'
-              --header "apikey:$LCMS_APIKEY"
+              --header "apikey:$LPB_RSA_SECRET"
               --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
-              https://$LCMS_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
+              https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
           done;
