@@ -1,2 +1,4 @@
 changed-files.txt
 .DS_Store
+node_modules
+bearer.token
