@@ -1,4 +1,4 @@
-name: Post content to Lighthouse Backend Project (LPB)
+name: Post content to Lighthouse Platform Backend (LPB)
 on:
   pull_request:
     types:
