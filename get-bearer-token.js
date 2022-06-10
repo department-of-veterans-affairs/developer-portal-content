@@ -27,7 +27,10 @@ const data = {
 };
 
 axios.post(bearerEndpoint, new URLSearchParams(data).toString(), {headers: headers})
+    .then(response => response.json())
     .then(response => {
+        console.log(response.data);
         console.log('Bearer token: ', response.data.access_token);
+        console.log(response);
         fs.writeFileSync('./bearer.token', response.data.access_token);
     });
