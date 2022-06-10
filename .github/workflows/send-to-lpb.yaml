@@ -94,6 +94,7 @@ jobs:
             CONTENT_STRING=`cat $n | node -p 'encodeURIComponent(require("fs").readFileSync(0))'`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo $BEARER_TOKEN | awk {'print length'}
             curl
               --request POST
               --header 'Content-Type:application/json'
