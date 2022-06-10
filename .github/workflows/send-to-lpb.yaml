@@ -85,6 +85,7 @@ jobs:
       - name: Send content to development
         env:
           LPB_HOST: 'dev-api.va.gov'
+          BEARER_TOKEN: ${{ steps.get_bearer_token.outputs.bearer_token }}
         run:
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LighthouseCMS";
@@ -96,7 +97,7 @@ jobs:
             curl
               --request POST
               --header 'Content-Type:application/json'
-              --header "Authorization:Bearer ${{ steps.get_bearer_token.outputs.bearer_token }}"
+              --header "Authorization:Bearer $BEARER_TOKEN"
               --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
               https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
           done;
