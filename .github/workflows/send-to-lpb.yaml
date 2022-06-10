@@ -75,6 +75,7 @@ jobs:
           wc -l ./rsa.pem;
           node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST;
           BEARER_TOKEN=`cat ./bearer.token`;
+          cat ./bearer.token | awk '{print length}'
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
       - name: Get file list
         uses: actions/download-artifact@v1
