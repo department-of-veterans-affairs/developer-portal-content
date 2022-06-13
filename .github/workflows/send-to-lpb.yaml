@@ -49,7 +49,7 @@ jobs:
           name: changed-files
           path: changed-files.txt
   send_content_to_development:
-    name: Send content to development LighthouseCMS
+    name: Send content to development Lighthouse Platform Backend (LPB)
     needs: [gather_content]
     environment: 
       name: development
