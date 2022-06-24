@@ -78,4 +78,5 @@ jobs:
               --header "Authorization:Bearer $BEARER_TOKEN"
               --data "{\"date\":\"$DATE_STRING\",\"content\":\"$CONTENT_STRING\"}"
               https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
+            sleep 1;
           done;
