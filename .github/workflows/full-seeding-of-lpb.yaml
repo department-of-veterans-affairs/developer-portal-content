@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Find files and artifact them
         run: |
-          find ./content -type f > seed-files.txt
+          find ./content/benefits/claims -type f > seed-files.txt
           echo "All files to upload:"
           cat seed-files.txt
       - name: Save changed files list
