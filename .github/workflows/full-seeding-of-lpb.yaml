@@ -72,6 +72,7 @@ jobs:
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             echo $BEARER_TOKEN | awk {'print length'};
+            echo "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}"
             curl
               --request POST
               --header 'Content-Type:application/json'
