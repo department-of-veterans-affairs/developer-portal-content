@@ -47,11 +47,12 @@ jobs:
           LPB_HOST: 'dev-api.va.gov'
           LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
           LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
+          OKTA_TOKEN_AUD: 'https://deptva-eval.okta.com/oauth2/ausg95zxf6dFPccy02p7/v1/token'
         run:
           echo "$LPB_RSA_TOKEN" > ./rsa.pem;
           ls -la;
           wc -l ./rsa.pem;
-          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST;
+          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST $OKTA_TOKEN_AUD;
           BEARER_TOKEN=`cat ./bearer.token`;
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
           echo "::set-output name=bearer_token::$BEARER_TOKEN"
@@ -99,11 +100,12 @@ jobs:
           LPB_HOST: 'api.va.gov'
           LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
           LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
+          OKTA_TOKEN_AUD: 'https://va.okta.com/oauth2/ausdppulkgBFJDZZe297/v1/token'
         run:
           echo "$LPB_RSA_TOKEN" > ./rsa.pem;
           ls -la;
           wc -l ./rsa.pem;
-          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST;
+          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST $OKTA_TOKEN_AUD;
           BEARER_TOKEN=`cat ./bearer.token`;
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
           echo "::set-output name=bearer_token::$BEARER_TOKEN"
