@@ -6,8 +6,9 @@ const uuid = require('uuid');
 const clientId = process.argv[2];
 const keyPath = process.argv[3];
 const lpbHost = process.argv[4];
+const oktaTokenAud = process.argv[5];
 
-const claims = { aud: 'https://deptva-eval.okta.com/oauth2/ausg95zxf6dFPccy02p7/v1/token', iss: clientId, sub: clientId, jti: uuid.v1() }
+const claims = { aud: oktaTokenAud, iss: clientId, sub: clientId, jti: uuid.v1() }
 const privateKey = fs.readFileSync(keyPath, 'utf8');
 const token = jwt.create(claims, privateKey, 'RS256')
 token.setExpiration(new Date().getTime() + 60*1000)
