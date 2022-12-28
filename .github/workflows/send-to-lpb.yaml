@@ -42,6 +42,9 @@ jobs:
               echo $f >> changed-files.txt
             done
           fi
+          if [ "${{ steps.pr_files.outputs.renamed }}" != "" ]; then
+            echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
+          fi
           echo "Expected files changes:"
           cat changed-files.txt
       - name: Save changed files list
