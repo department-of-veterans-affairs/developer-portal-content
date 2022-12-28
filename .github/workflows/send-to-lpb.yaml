@@ -30,24 +30,17 @@ jobs:
         with:
           fetch-depth: 0
       - id: pr_files
-        uses: Ana06/get-changed-files@v1.2
+        uses: Ana06/get-changed-files@v2.2.0
       - id: upload_content
         name: Find files and send them
         continue-on-error: true
         run: |
           # If it's a PR change from a space delimited list to one file per line
-          if [ "${{ steps.pr_files.outputs.added_modified }}" != "" ]; then
+          if [ "${{ steps.pr_files.outputs.added_modified_renamed }}" != "" ]; then
             touch changed-files.txt
-            for f in `echo "${{ steps.pr_files.outputs.added_modified }}"`; do
+            for f in `echo "${{ steps.pr_files.outputs.added_modified_renamed }}"`; do
               echo $f >> changed-files.txt
             done
-          fi
-          if [ "${{ steps.pr_files.outputs.renamed }}" != "" ]; then
-            touch changed-files.txt
-            for f in `echo "${{ steps.pr_files.outputs.renamed }}"`; do
-              echo $f >> changed-files.txt
-            done
-            echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
           fi
           echo "Expected files changes:"
           cat changed-files.txt
