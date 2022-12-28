@@ -13,6 +13,7 @@ jobs:
     name: Gather the changed content
     runs-on: ubuntu-latest
     outputs:
+      rename_warning: ${{ steps.get_target_environment.outputs.rename_warning }}
       target_environment: ${{ steps.get_target_environment.outputs.target_environment }}
     steps:
       - id: get_target_environment
@@ -23,7 +24,7 @@ jobs:
             TARGET_ENVIRONMENT="production"
           fi
           echo $TARGET_ENVIRONMENT
-          echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
+          echo "target_environment=$TARGET_ENVIRONMENT" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -40,6 +41,13 @@ jobs:
             for f in `echo "${{ steps.pr_files.outputs.added_modified }}"`; do
               echo $f >> changed-files.txt
             done
+          fi
+          if [ "${{ steps.pr_files.outputs.renamed }}" != "" ]; then
+            touch changed-files.txt
+            for f in `echo "${{ steps.pr_files.outputs.renamed }}"`; do
+              echo $f >> changed-files.txt
+            done
+            echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
           fi
           echo "Expected files changes:"
           cat changed-files.txt
@@ -107,6 +115,17 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/release-notes/).'
+            })
+      - name: Previously Merged Warning Comment on PR
+        if: needs.gather_content.outputs.rename_warning == 'TRUE'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'If this release note was merged to the `main` branch on another PR, you will need to reach out to [Team Okapi](https://lighthouseva.slack.com/archives/C01931CFMTQ) to remove the copy that remains on the previous date.'
             })
   send_content_to_production:
     name: Send content to production LPB
