@@ -23,7 +23,7 @@ jobs:
             TARGET_ENVIRONMENT="production"
           fi
           echo $TARGET_ENVIRONMENT
-          echo "::set-output name=target_environment::$TARGET_ENVIRONMENT"
+          echo "target_environment=$TARGET_ENVIRONMENT" >> $GITHUB_OUTPUT
       - name: Checkout
         uses: actions/checkout@v2
         with:
