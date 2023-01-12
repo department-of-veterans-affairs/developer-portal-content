@@ -1,0 +1,3 @@
+We added functionality to our Appeals POST endpoints that optionally permits a veteran's ICN to be provided as part of the calls headers. This is preliminary work for eventually removing SSN and using ICN in it's place.
+
+To learn more, read the [Decision Reviews API documentation](https://developer.va.gov/explore/appeals/docs/decision_reviews?version=current). 
