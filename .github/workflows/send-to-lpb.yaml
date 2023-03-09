@@ -31,6 +31,10 @@ jobs:
           fetch-depth: 0
       - id: pr_files
         uses: Ana06/get-changed-files@v2.2.0
+        with:
+          filter: |
+            *
+            !content/website/*
       - id: upload_content
         name: Find files and send them
         continue-on-error: true
