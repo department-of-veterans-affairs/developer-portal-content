@@ -34,7 +34,7 @@ jobs:
       - id: pr_files
         uses: Ana06/get-changed-files@v2.2.0
         with:
-          filter: 'content/website/news/*'
+          filter: 'content/website/news/**'
       - id: upload_content
         name: Find files and send them
         continue-on-error: true
