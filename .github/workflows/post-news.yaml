@@ -97,7 +97,7 @@ jobs:
             echo "Posting $n to LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
             TITLE_STRING=`cat $n | grep title | cut -c8-`;
-            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/items.*/\1/'`;
+            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
             SOURCE_STRING=`cat $n | grep source | cut -c9-`;
             URL_STRING=`cat $n | grep url | cut -c6-`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
@@ -112,7 +112,7 @@ jobs:
             echo "Posting $n to LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
             TITLE_STRING=`cat $n | grep title | cut -c8-`;
-            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/items.*/\1/'`;
+            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
             URL_STRING=`cat $n | grep url | cut -c6-`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
             curl
@@ -184,7 +184,7 @@ jobs:
             echo "Posting $n to LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
             TITLE_STRING=`cat $n | grep title | cut -c8-`;
-            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/items.*/\1/'`;
+            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
             SOURCE_STRING=`cat $n | grep source | cut -c9-`;
             URL_STRING=`cat $n | grep url | cut -c6-`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
@@ -199,7 +199,7 @@ jobs:
             echo "Posting $n to LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
             TITLE_STRING=`cat $n | grep title | cut -c8-`;
-            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/items.*/\1/'`;
+            TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
             URL_STRING=`cat $n | grep url | cut -c6-`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
             curl
