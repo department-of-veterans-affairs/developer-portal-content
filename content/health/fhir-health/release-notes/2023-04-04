@@ -1,0 +1,1 @@
+ To conform to FHIR specifications, we have added additional snake_case fields to our .well-known response. These provide the exact same information as their respective camelCase counterparts. It is recommended that consumers migrate to using snake_case fields as the camelCase fields may be removed in a later version.
