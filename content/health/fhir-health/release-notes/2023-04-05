@@ -1,0 +1,1 @@
+To comply with US Core 5 standards, the system value for the dataAbsentReason field is updated from  http://hl7.org/fhir/data-absent-reason to  http://hl7.org/fhir/ValueSet/data-absent-reason for R4 Observation resource records that have no components
