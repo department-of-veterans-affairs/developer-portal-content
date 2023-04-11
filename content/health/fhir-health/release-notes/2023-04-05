@@ -1,0 +1,1 @@
+To comply with new U.S. Core 5 standards, we’ve made changes to the values for the dataAbsentReason field. For R4 Observation resource records that have no components, this field will now be populated with [the dataAbsentReason coding system](https://terminology.hl7.org/5.1.0/CodeSystem-data-absent-reason.html). This change should have no effect on API consumers. 
