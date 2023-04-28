@@ -1,1 +1,2 @@
 We've updated the race and ethnicity URLs in R4 Patient resource records to comply with the new [U.S. Core 5 standards for race](http://hl7.org/fhir/us/core/STU5.0.1/StructureDefinition-us-core-race.html) and new [U.S. Core 5 standards for ethnicity](http://hl7.org/fhir/us/core/STU5.0.1/StructureDefinition-us-core-ethnicity.html). 
+For consistency purposes, the R4 MedicationRequest resource has been updated to only return the self link in an empty bundle. The first/last links will no longer be populated.
