@@ -1,6 +1,6 @@
 We added a new version (v2) of the Veteran Verification API to the developer portal, and the API has been renamed to the 'Veteran Service History and Eligibility API'.
 
-The following enhancements and new features are available in V2:  
+The following enhancements and new features are available in v2:  
 
 All of the API's endpoints can now be accessed using either Authorization Code Flow OAuth or Client Credentials Grant (CCG) OAuth.   
 There are two versions of each endpoint, a GET when ICN is provided and a POST when demographic details will be used to match a Veteran.   
