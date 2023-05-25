@@ -6,7 +6,7 @@ All of the API's endpoints can now be accessed using either Authorization Code F
 There are two versions of each endpoint, a GET when ICN is provided and a POST when demographic details will be used to match a Veteran.   
 The disability_rating endpoint now includes the diagnostic code and name associated with each individual rating.
 The service_history endpoint now includes additional information:
-A service episode's component_of_service identifies unique sub-categories within a main branch of service, such as "Reserves."  In the prior version (Veteran Verification, v1), the branch_of_service is consistently a main branch (e.g., Army, Navy...) with no sub-category values such as "Reserves."  Adding this distinct field for this purpose clarifies which branch of service a period of Reserve duty is associated with.  
+A service episode's component_of_service identifies unique sub-categories within a main branch of service, such as "Reserves."  In the prior version (Veteran Verification, v1), the branch_of_service is consistently a main branch (e.g., Army, Navy...) with no sub-category values such as "Reserves."  Adding this distinct field reveals when a Veteran was in the Reserves for their branch of military service.  
 A new military summary section includes information pulled from all service episodes, such as:
 
 An indicator of whether the person is currently on active duty.
