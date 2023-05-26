@@ -17,7 +17,7 @@ The total number of Regular Active Duty Days, Reserve Active Duty Days, Guard Ac
 
 The new flashes endpoint shares an attribute on a Veteran's profile that describes special circumstances which can apply to a Veteran. Flashes can aid in properly routing or expediting certain claims or determining eligibility for some VA benefits. This endpoint currently shares only a limited subset of the available flashes that can be assigned to Veterans. If you have a use case that would benefit from additional flashes being added to this endpoint, please [contact us](https://developer.va.gov/support/contact-us) with the details. 
 The new enrolled_benefits endpoint shares the codes and names of benefits a Veteran is enrolled in.
-Changes to follow current standards, such as improvements to error details and HTTPS response codes used.
+Changes have been made to follow current standards, such as improvements to error details and HTTPS response codes used.
 As always, it's important to know that the new version must support backward compatibility. It should:
 
 Be prepared to handle HTTP status codes not explicitly specified in endpoint definitions.
