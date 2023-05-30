@@ -2,7 +2,7 @@ We added a new version (v2) of the Veteran Verification API to the developer por
 
 The following enhancements and new features are available in v2:  
 
-All of the API's endpoints can now be accessed using either Authorization Code Flow OAuth or Client Credentials Grant (CCG) OAuth.   
+All of the API's endpoints can now be accessed using either [Authorization Code Flow OAuth](https://developer.va.gov/explore/authorization/docs/authorization-code?api=claims) or [Client Credentials Grant (CCG) OAuth](https://developer.va.gov/explore/authorization/docs/client-credentials?api=claims).   
 There are two versions of each endpoint: a GET when an ICN is provided and a POST when demographic details will be used to match a Veteran.   
 The disability_rating endpoint now includes the diagnostic code and name associated with each individual rating.
 The service_history endpoint now includes additional information:
