@@ -1,0 +1,1 @@
+We have updated the MedicationCodeableConcept field in the MedicationDispense resource to include the Veterans Affairs Unique Identifier (VUID). This allows consumers to better identify medications and map them to industry standard codings.
