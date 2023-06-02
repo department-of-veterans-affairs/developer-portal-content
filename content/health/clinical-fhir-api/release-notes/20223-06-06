@@ -1,0 +1,25 @@
+•	In R4 **Patient** resource records, these are the updated system values:
+   o	Patient.identifier[*].type.coding: http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS 
+   o	maritalStatus.coding.system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
+   o	contact.relationship.coding:  http://terminology.hl7.org/CodeSystem/v2-0131 with code now C for emergency and N for family
+   o	Patient ethnicity extension system: urn:oid:2.16.840.1.113883.6.238
+   o	Patient race extension system: urn:oid:2.16.840.1.113883.6.238
+
+•	In R4 **Practitioner** resource records, the Practitioner.identifier.type.coding system URL is  http://terminology.hl7.org/CodeSystem/v2-0203
+
+•	The **Capability Statement** has been updated with the following:
+   o	The name field is: api-management-platform-health-fhir-r4
+   o	rest.security.service.coding.system URL is  http://hl7.org/fhir/ValueSet/restful-security-service
+   o	These following resource profile URLs have these updated values:
+     o	Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
+     o	Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
+     o	DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
+     o	DocumentReference Profile URL:http://hl7.org/fhir/us/core/StructureDefinition/us-core-documentreference
+     o	Organization profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
+   o	The implementation field and the following values were added:
+      o	implementation.description: FHIR R4 Health APIs 
+      o	implementation.url: https://sandbox-api.va.gov/services/fhir/v0/r4  
+   o	The instantiates field and the following value was added: 
+      o	instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
+  
+•	In all R4 **MedicationRequest** resource records, the _requester field has been removed. The Data Absent Reason that previously could appear in _requester is now moved into requester.extension.
