@@ -16,7 +16,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
 4. In the R4 **Capability Statement** resource:
     - The name field is now api-management-platform-health-fhir-r4.
     - rest.security.service.coding.system URL is now http://hl7.org/fhir/ValueSet/restful-security-service.
-   o	These following resource profile URLs have these updated values:
+    - These following resource profile URLs have updated values:
      o	Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
      o	Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
      o	DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
