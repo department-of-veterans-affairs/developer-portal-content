@@ -16,7 +16,7 @@ We've made changes to the Clinical Health API in order to comply with the [U.S. 
     - These following resource profile URLs have updated values:
       - Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
       - Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
-     o	DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
+      - DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
      o	DocumentReference Profile URL:http://hl7.org/fhir/us/core/StructureDefinition/us-core-documentreference
      o	Organization profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
    o	The implementation field and the following values were added:
