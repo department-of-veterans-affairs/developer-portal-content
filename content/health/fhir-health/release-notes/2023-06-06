@@ -8,7 +8,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - maritalStatus.coding.system new URL is now http://terminology.hl7.org/CodeSystem/v3-MaritalStatus.
     - contact.relationship.coding new URL is now http://terminology.hl7.org/CodeSystem/v2-0131, and has the new codes C for emergency and N for family. 
     - Patient ethnicity extension system is now urn:oid:2.16.840.1.113883.6.238
-   o	Patient race extension system: urn:oid:2.16.840.1.113883.6.238
+    - Patient race extension system is now urn:oid:2.16.840.1.113883.6.238
 
 •	In R4 **Practitioner** resource records, the Practitioner.identifier.type.coding system URL is  http://terminology.hl7.org/CodeSystem/v2-0203
 
