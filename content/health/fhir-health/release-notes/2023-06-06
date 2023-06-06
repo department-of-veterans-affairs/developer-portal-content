@@ -14,7 +14,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - Practitioner.identifier.type.coding system URL is now http://terminology.hl7.org/CodeSystem/v2-0203.
 
 4. In the R4 **Capability Statement** resource:
-   o	The name field is: api-management-platform-health-fhir-r4
+    - The name field is now api-management-platform-health-fhir-r4.
     - rest.security.service.coding.system URL is now http://hl7.org/fhir/ValueSet/restful-security-service.
    o	These following resource profile URLs have these updated values:
      o	Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
