@@ -37,7 +37,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - The DiagnosticReport.code.text field is no longer being populated.
     - R4 DiagnosticReport.codes fields are:
       - system:  http://loinc.org
-      o code: 1502-2
+      - code: 1502-2
       o display: Laboratory report
 
 
