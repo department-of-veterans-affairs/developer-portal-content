@@ -1,7 +1,7 @@
 We've made changes to the Patient Health API in order to comply with the [U.S. Core 5 standards](https://hl7.org/fhir/us/core/STU5/). These standards are based on FHIR Version R4 and define the essential requirements for FHIR resources to create the US Core Profiles.
 
 1. In R4 **AllergyIntolerance** resource records:
-- AllergyIntolerance.reaction.manifestation system values are now http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical and http://terminology.hl7.org/CodeSystem/allergyintolerance-verification. 
+    - AllergyIntolerance.reaction.manifestation system values are now http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical and http://terminology.hl7.org/CodeSystem/allergyintolerance-verification. 
 
 •	In R4 **Patient** resource records, these are the updated system values:
    o	Patient.identifier[*].type.coding: http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS 
