@@ -4,7 +4,7 @@ We've made changes to the Clinical Health API in order to comply with the [U.S. 
     - Patient.identifier[*].type.coding new URL is http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS.
     - maritalStatus.coding.system new URL is now http://terminology.hl7.org/CodeSystem/v3-MaritalStatus.
     - contact.relationship.coding new URL is now http://terminology.hl7.org/CodeSystem/v2-0131, and has the new codes C for emergency and N for family. 
-   o	Patient ethnicity extension system: urn:oid:2.16.840.1.113883.6.238
+    - Patient ethnicity extension system is now urn:oid:2.16.840.1.113883.6.238
     - Patient race extension system is now urn:oid:2.16.840.1.113883.6.238
 
 2. In R4 **Practitioner** resource records:
