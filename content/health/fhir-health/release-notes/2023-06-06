@@ -26,7 +26,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
       - implementation.description: FHIR R4 Health APIs 
       - implementation.url: https://sandbox-api.va.gov/services/fhir/v0/r4  
     - The instantiates field and the following value was added: 
-      o	instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
+      - instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
   
 5. In all R4 **MedicationRequest** resource records: 
     - The _requester field has been removed. 
