@@ -10,7 +10,7 @@ We've made changes to the Clinical Health API in order to comply with the [U.S. 
 2. In R4 **Practitioner** resource records:
     - Practitioner.identifier.type.coding system URL is now http://terminology.hl7.org/CodeSystem/v2-0203.
 
-•	The **Capability Statement** has been updated with the following:
+3. In the R4 **Capability Statement** resource:
    o	The name field is: api-management-platform-health-fhir-r4
    o	rest.security.service.coding.system URL is  http://hl7.org/fhir/ValueSet/restful-security-service
    o	These following resource profile URLs have these updated values:
