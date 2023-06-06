@@ -38,7 +38,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - R4 DiagnosticReport.codes fields are:
       - system:  http://loinc.org
       - code: 1502-2
-      o display: Laboratory report
+      - display: Laboratory report
 
 
 
