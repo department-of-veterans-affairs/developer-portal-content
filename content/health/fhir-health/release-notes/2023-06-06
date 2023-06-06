@@ -3,7 +3,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
 1. In R4 **AllergyIntolerance** resource records:
     - AllergyIntolerance.reaction.manifestation system values are now http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical and http://terminology.hl7.org/CodeSystem/allergyintolerance-verification. 
 
-•	In R4 **Patient** resource records, these are the updated system values:
+2. In R4 **Patient** resource records:
    o	Patient.identifier[*].type.coding: http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS 
    o	maritalStatus.coding.system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
    o	contact.relationship.coding:  http://terminology.hl7.org/CodeSystem/v2-0131 with code now C for emergency and N for family
