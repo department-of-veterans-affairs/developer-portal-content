@@ -23,7 +23,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
       - DocumentReference Profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-documentreference
       - Organization profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
 - The implementation field and the following values were added:
-      o	implementation.description: FHIR R4 Health APIs 
+      - implementation.description: FHIR R4 Health APIs 
       o	implementation.url: https://sandbox-api.va.gov/services/fhir/v0/r4  
     - The instantiates field and the following value was added: 
       o	instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
