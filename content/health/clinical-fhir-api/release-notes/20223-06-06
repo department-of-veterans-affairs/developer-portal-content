@@ -22,4 +22,4 @@
    o	The instantiates field and the following value was added: 
       o	instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
   
-•	In all R4 **MedicationRequest** resource records, the _requester field has been removed. The Data Absent Reason that previously could appear in _requester is now moved into requester.extension.
+
