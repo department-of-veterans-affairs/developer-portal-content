@@ -10,7 +10,8 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - Patient ethnicity extension system is now urn:oid:2.16.840.1.113883.6.238
     - Patient race extension system is now urn:oid:2.16.840.1.113883.6.238
 
-•	In R4 **Practitioner** resource records, the Practitioner.identifier.type.coding system URL is  http://terminology.hl7.org/CodeSystem/v2-0203
+3. In R4 **Practitioner** resource records:
+    - Practitioner.identifier.type.coding system URL is now http://terminology.hl7.org/CodeSystem/v2-0203.
 
 •	The **Capability Statement** has been updated with the following:
    o	The name field is: api-management-platform-health-fhir-r4
