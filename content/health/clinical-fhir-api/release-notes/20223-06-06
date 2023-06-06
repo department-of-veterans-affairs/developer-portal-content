@@ -1,7 +1,7 @@
 We've made changes to the Clinical Health API in order to comply with the [U.S. Core 5 standards](https://hl7.org/fhir/us/core/STU5/). These standards are based on FHIR Version R4 and define the essential requirements for FHIR resources to create the US Core Profiles.
 
 1. In R4 **Patient** resource records:
-   o	Patient.identifier[*].type.coding: http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS 
+    - Patient.identifier[*].type.coding new URL is http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS.
    o	maritalStatus.coding.system: http://terminology.hl7.org/CodeSystem/v3-MaritalStatus
    o	contact.relationship.coding:  http://terminology.hl7.org/CodeSystem/v2-0131 with code now C for emergency and N for family
    o	Patient ethnicity extension system: urn:oid:2.16.840.1.113883.6.238
