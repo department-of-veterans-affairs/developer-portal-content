@@ -32,7 +32,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - The _requester field has been removed. 
     - The Data Absent Reason that previously could appear in _requester is now moved into requester.extension.
 
-6. In all  **DiagnosticReport** resource records: 
+6. In all **DiagnosticReport** resource records: 
     - DiagnosticReport.code has been populated to distinguish DiagnosticReport records as Laboratory report records. 
     - The DiagnosticReport.code.text field is no longer being populated.
     - R4 DiagnosticReport.codes fields are:
