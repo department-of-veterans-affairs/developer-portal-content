@@ -22,7 +22,7 @@ We've made changes to the Clinical Health API in order to comply with the [U.S. 
     - The implementation field and the following values were added:
       - implementation.description: FHIR R4 Health APIs 
       - implementation.url: https://sandbox-api.va.gov/services/fhir/v0/r4  
-   o	The instantiates field and the following value was added: 
+    - The instantiates field and the following value was added:
       o	instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
   
 
