@@ -18,7 +18,7 @@ We've made changes to the Patient Health API in order to comply with the [U.S. C
     - rest.security.service.coding.system URL is now http://hl7.org/fhir/ValueSet/restful-security-service.
     - These following resource profile URLs have updated values:
       - Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
-     o	Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
+      - Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
      o	DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
       o DocumentReference Profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-documentreference
      o	Organization profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
