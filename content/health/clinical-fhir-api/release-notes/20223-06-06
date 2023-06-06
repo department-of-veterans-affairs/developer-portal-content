@@ -12,7 +12,7 @@ We've made changes to the Clinical Health API in order to comply with the [U.S. 
 
 3. In the R4 **Capability Statement** resource:
    o	The name field is: api-management-platform-health-fhir-r4
-   o	rest.security.service.coding.system URL is  http://hl7.org/fhir/ValueSet/restful-security-service
+    - rest.security.service.coding.system URL is now http://hl7.org/fhir/ValueSet/restful-security-service.
    o	These following resource profile URLs have these updated values:
      o	Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
      o	Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
