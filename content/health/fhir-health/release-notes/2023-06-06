@@ -1,0 +1,44 @@
+We've made changes to the Patient Health API in order to comply with the [U.S. Core 5 standards](https://hl7.org/fhir/us/core/STU5/). These standards are based on FHIR Version R4 and define the essential requirements for FHIR resources to create the US Core Profiles.
+
+1. In R4 **AllergyIntolerance** resource records:
+    - AllergyIntolerance.reaction.manifestation system values are now http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical and http://terminology.hl7.org/CodeSystem/allergyintolerance-verification. 
+
+2. In R4 **Patient** resource records:
+    - Patient.identifier[*].type.coding new URL is http://terminology.hl7.org/CodeSystem/v2-0203 and the SSN identifier’s code is now SS. 
+    - maritalStatus.coding.system new URL is now http://terminology.hl7.org/CodeSystem/v3-MaritalStatus.
+    - contact.relationship.coding new URL is now http://terminology.hl7.org/CodeSystem/v2-0131, and has the new codes C for emergency and N for family. 
+    - Patient ethnicity extension system is now urn:oid:2.16.840.1.113883.6.238
+    - Patient race extension system is now urn:oid:2.16.840.1.113883.6.238
+
+3. In R4 **Practitioner** resource records:
+    - Practitioner.identifier.type.coding system URL is now http://terminology.hl7.org/CodeSystem/v2-0203.
+
+4. In the R4 **Capability Statement** resource:
+    - The name field is now api-management-platform-health-fhir-r4.
+    - rest.security.service.coding.system URL is now http://hl7.org/fhir/ValueSet/restful-security-service.
+    - These following resource profile URLs have updated values:
+      - Appointment profile URL: http://hl7.org/fhir/StructureDefinition/Appointment
+      - Binary profile URL: http://hl7.org/fhir/StructureDefinition/Binary
+      - DeviceRequest profile URL: http://hl7.org/fhir/StructureDefinition/DeviceRequest
+      - DocumentReference Profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-documentreference
+      - Organization profile URL: http://hl7.org/fhir/us/core/StructureDefinition/us-core-organization
+    - The implementation field and the following values were added:
+      - implementation.description: FHIR R4 Health APIs 
+      - implementation.url: https://sandbox-api.va.gov/services/fhir/v0/r4  
+    - The instantiates field and the following value was added: 
+      - instantiates: http://hl7.org/fhir/us/core/CapabilityStatement/us-core-server 
+  
+5. In all R4 **MedicationRequest** resource records: 
+    - The _requester field has been removed. 
+    - The Data Absent Reason that previously could appear in _requester is now moved into requester.extension.
+
+6. In all R4 **DiagnosticReport** resource records: 
+    - DiagnosticReport.code has been populated to distinguish DiagnosticReport records as Laboratory report records. 
+    - The DiagnosticReport.code.text field is no longer being populated.
+    - R4 DiagnosticReport.codes fields are:
+      - system:  http://loinc.org
+      - code: 1502-2
+      - display: Laboratory report
+
+
+
