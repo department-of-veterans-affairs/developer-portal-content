@@ -2,7 +2,13 @@ We've added the new Education Benefits API to the developer portal. It replaces 
 
 Important: To get production access, you must work for VA or have specific VA agreements. If you have questions, please contact us here; https://developer.va.gov/support/contact-us.
 
-The Education Benefits API allows authorized internal systems to obtain information about a Veteran’s GI Bill (Chapter 33), education benefits eligibility, and usage history.  Learn more about VA education and training benefits.
+The Education Benefits API returns information about a Veteran’s education benefits, including:
+
+- Whether a Veteran is eligible for the Post-9/11 GI Bill’s education benefits.
+- The total education benefits earned by the Veteran.
+- The amount of a Veteran’s education benefits that has been used.
+- The remaining amount of a Veteran’s education benefit.
+- Details of educational enrollments for which benefits were used, including start and end dates, schools, and credits received. 
 
 The API takes in a Veteran’s ICN and returns: 
 •	Whether the Veteran is eligible for post-9/11 GI Bill (Chapter 33) benefits
