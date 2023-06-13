@@ -12,7 +12,7 @@ The Education Benefits API returns information about a Veteran’s education ben
 
 •	Amount of education benefits used
 
-Authentication and Authorization
+**Authentication and Authorization**
 
 This API uses the client credentials grant (CCG) flow to provide an access token to trusted systems. See our Authorization Guide for more details.
 
