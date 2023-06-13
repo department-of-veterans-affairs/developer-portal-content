@@ -10,7 +10,6 @@ The Education Benefits API returns information about a Veteran’s education ben
 - The remaining amount of a Veteran’s education benefit.
 - Details of educational enrollments for which benefits were used, including start and end dates, schools, and credits received. 
 
-•	Whether the Veteran is eligible for post-9/11 GI Bill (Chapter 33) benefits
 •	Amount of education benefits used
 •	Remaining benefits entitlement
 •	Historical enrollments, including begin and end dates, type of training, facility and hours
