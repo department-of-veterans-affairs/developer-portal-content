@@ -1,6 +1,6 @@
 We've added the new Education Benefits API to the developer portal. It replaces the EVSS Education Services API. 
 
-Important: To get production access, you must work for VA or have specific VA agreements. If you have questions, please contact us here; https://developer.va.gov/support/contact-us.
+**Important**: To get production access for this API, you must work for VA or have specific VA agreements. If you have any questions, [contact us](https://developer.va.gov/support/contact-us).
 
 The Education Benefits API returns information about a Veteran’s education benefits, including:
 
