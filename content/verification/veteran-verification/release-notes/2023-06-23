@@ -4,7 +4,6 @@ The following disability rating fields have been added:
   - disability_rating_id, which is the individual rating ID of a disability. 
 
 
-Be prepared to handle HTTP status codes not explicitly specified in endpoint definitions.
 
 Be tolerant of unknown fields in the payload and ignore the deserialization of new fields.
 
