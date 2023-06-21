@@ -1,0 +1,14 @@
+We added an update to (v2) of the Veteran Service History & Eligibility to the developer portal, and the API has been renamed to the 'Veteran Service History and Eligibility API'.
+The following disability rating fields have been added:
+  -diagnostic_text
+  -disability_rating_id
+
+As always, it's important to know that the new version must support backward compatibility. It should:
+
+Be prepared to handle HTTP status codes not explicitly specified in endpoint definitions.
+
+Be tolerant of unknown fields in the payload and ignore the deserialization of new fields.
+
+Follow the redirect when the server returns an HTTP status code 301 (Moved Permanently).
+
+Review the API documentation to learn more about the new version of this API.
