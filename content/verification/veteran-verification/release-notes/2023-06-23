@@ -1,4 +1,4 @@
-We added an update to (v2) of the Veteran Service History & Eligibility to the developer portal, and the API has been renamed to the 'Veteran Service History and Eligibility API'.
+We've added some updates to v2 of the Veteran Service History & Eligibility API.
 The following disability rating fields have been added:
   -diagnostic_text
   -disability_rating_id
