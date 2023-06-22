@@ -1,7 +1,7 @@
 We've added some updates to v2 of the Veteran Service History & Eligibility API.
 
 The following disability rating fields have been added:
-  - diagnostic_text, which is a description of the diagnosis. An example of this field would be bilateral hearing loss.
+  - diagnostic_text, which is a description of a diagnosis. An example of this field would be bilateral hearing loss.
   - disability_rating_id, which is a code tied to a disability rating. 
 
 
