@@ -4,7 +4,7 @@ The following disability rating fields have been added:
   - diagnostic_text, which is a description of a diagnosis. An example of this field would be bilateral hearing loss.
   - disability_rating_id, which is a code tied to a disability rating. 
 
-
+Review the [API documentation](https://developer.va.gov/explore/verification/docs/veteran_verification?version=current) to learn more about the new version of this API.
 
 
 
