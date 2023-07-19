@@ -1,0 +1,1 @@
+We added AllergyIntolerance FHIR R4 resource that supports READ and SEARCH functionality and includes the ability to search by patient and _lastUpdated date.
