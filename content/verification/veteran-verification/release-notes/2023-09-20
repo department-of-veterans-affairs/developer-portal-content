@@ -3,7 +3,7 @@ Additional fields have been added to the disability rating endpoint as follows;
 - Individual rating end date, which is the date the service decision expires. An example would be 2019-10-09.
 The date the service decision expires.  
   Example: 2019-10-09
-Diagnostic type code:  (string) 
+Diagnostic type code, which is the code that corresponds with the diagnosis. An example would be 1134.
 Type code for the diagnosis.  
   Example:  1134
 Diagnostic text:  (string) 
