@@ -1,4 +1,4 @@
-Additional fields have been added to the disability rating endpoint as follows;
+We've added some additional fields to the disability rating endpoint for v2 of the Veteran Service History and Eligibility API:
 
 - Individual rating end date, which is the date the service decision expires. An example would be 2019-10-09.
 The date the service decision expires.  
