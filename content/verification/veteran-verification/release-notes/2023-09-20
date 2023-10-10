@@ -2,7 +2,6 @@ We've added some additional fields to the disability rating endpoint for v2 of t
 
 - Individual rating end date, which is the date the service decision expires. An example would be 2019-10-09.
 Diagnostic type code, which is the code that corresponds with the diagnosis. An example would be 1134.
-Type code for the diagnosis.  
   Example:  1134
 Diagnostic text, which is a description of the diagnosis. An example would be bilateral hearing loss.
 Text related to the diagnosis.   
