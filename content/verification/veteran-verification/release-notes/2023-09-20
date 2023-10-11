@@ -2,6 +2,6 @@ We've added some additional fields to the disability rating endpoint for v2 of t
 
 - rating_end_date, which is the date the service decision expires. An example would be 2019-10-09.
 - diagnostic_type_code, which is the code that corresponds with the diagnosis. An example would be 1134.
-- Diagnostic text, which is a description of the diagnosis. An example would be bilateral hearing loss.
+- diagnostic_text, which is a description of the diagnosis. An example would be bilateral hearing loss.
 
 Review the [API documentation](https://developer.va.gov/explore/api/veteran-service-history-and-eligibility/docs?version=current) to learn more about these updates.
