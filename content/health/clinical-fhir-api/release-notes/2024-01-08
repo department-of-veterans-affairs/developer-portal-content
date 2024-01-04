@@ -1,0 +1,3 @@
+We have updated MedicationRequest resource to include unreleased medications data.
+• No changes are made to the existing general MedicationRequest calls, no unreleased medications are returned. 
+• When there is a search for a specific MedicationRequest using *identifier*, the view is changed to search for the medications only for that patient and include the unreleased medications.
