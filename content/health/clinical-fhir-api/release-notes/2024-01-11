@@ -1,0 +1,3 @@
+We have updated the MedicationRequest resource to include unreleased medications data.
+• No changes are made to the existing general MedicationRequest calls, and no unreleased medications are returned. 
+• When a search request uses a patient identifier, a VistA medication order ID, and the VistA site number where the order was placed, results will only show that patient's medications, including their unreleased medications.
