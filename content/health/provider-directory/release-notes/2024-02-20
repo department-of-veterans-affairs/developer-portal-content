@@ -1,0 +1,1 @@
+We removed the optional birthDate field from the **Practitioner** resource. The goal of this change is to secure providers' personal information.
