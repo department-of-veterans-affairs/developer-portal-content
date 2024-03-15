@@ -1,0 +1,1 @@
+We have updated the Observation FHIR R4 resource to include the [Observation Screening Assessment Profile] (https://hl7.org/fhir/us/core/STU6/StructureDefinition-us-core-observation-screening-assessment.html) to provide answers to Food Insecurity assessments that evaluate the history of patients' food situations.
