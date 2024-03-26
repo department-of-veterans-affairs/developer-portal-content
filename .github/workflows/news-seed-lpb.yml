@@ -1,0 +1,162 @@
+name: Seed all news to Lighthouse Platform Backend (LPB)
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "What environment are you seeding?"
+        required: true
+        type: environment
+
+jobs:
+  gather_content:
+    name: Gather all content
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Find files and artifact them
+        run: |
+          find ./content/website -type f > seed-files.txt
+          echo "All files to upload:"
+          cat seed-files.txt
+      - name: Save changed files list
+        uses: actions/upload-artifact@v1
+        with:
+          name: seed-files
+          path: seed-files.txt
+  send_content_to_development:
+    name: Send content to development Lighthouse Platform Backend (LPB)
+    needs: [gather_content]
+    environment:
+      name: development
+      url: https://dev-developer.va.gov
+    runs-on: ubuntu-latest
+    if: ${{ inputs.environment == 'development' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: NPM install
+        run: npm ci
+      - id: get_bearer_token
+        name: Get Bearer Token
+        env:
+          LPB_HOST: "dev-api.va.gov"
+          LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
+          LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
+          OKTA_TOKEN_AUD: "https://deptva-eval.okta.com/oauth2/ausg95zxf6dFPccy02p7/v1/token"
+        run: echo "$LPB_RSA_TOKEN" > ./rsa.pem;
+          ls -la;
+          wc -l ./rsa.pem;
+          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST $OKTA_TOKEN_AUD;
+          BEARER_TOKEN=`cat ./bearer.token`;
+          echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
+          echo "::set-output name=bearer_token::$BEARER_TOKEN"
+      - name: Get file list
+        uses: actions/download-artifact@v1
+        with:
+          name: seed-files
+      - name: Seed content to development
+        env:
+          LPB_HOST: "dev-api.va.gov"
+          BEARER_TOKEN: ${{ steps.get_bearer_token.outputs.bearer_token }}
+        run:
+          for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
+          TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
+          SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
+          URL_STRING=`cat $n | 's/^.*url:\s*//'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer ${{ env.bearer_token }}"
+          --data "{\"date\":\"$DATE_STRING\",\"title\":\"$TITLE_STRING\",\"source\":\"$SOURCE_STRING\",\"url\":\"$URL_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items;
+          done;
+          for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
+          TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
+          URL_STRING=`cat $n | 's/^.*url:\s*//'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer ${{ env.bearer_token }}"
+          --data "{\"date\":\"$DATE_STRING\",\"title\":\"$TITLE_STRING\",\"url\":\"$URL_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items;
+          done;
+  send_content_to_production:
+    name: Send content to production Lighthouse Platform Backend (LPB)
+    needs: [gather_content]
+    environment:
+      name: production
+      url: https://developer.va.gov
+    runs-on: ubuntu-latest
+    if: ${{ inputs.environment == 'production' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: NPM install
+        run: npm ci
+      - id: get_bearer_token
+        name: Get Bearer Token
+        env:
+          LPB_HOST: "api.va.gov"
+          LPB_CLIENT_ID: ${{ secrets.LPB_CLIENT_ID }}
+          LPB_RSA_TOKEN: ${{ secrets.LPB_RSA_SECRET }}
+          OKTA_TOKEN_AUD: "https://va.okta.com/oauth2/ausdppulkgBFJDZZe297/v1/token"
+        run: echo "$LPB_RSA_TOKEN" > ./rsa.pem;
+          ls -la;
+          wc -l ./rsa.pem;
+          node ./get-bearer-token.js $LPB_CLIENT_ID ./rsa.pem $LPB_HOST $OKTA_TOKEN_AUD;
+          BEARER_TOKEN=`cat ./bearer.token`;
+          echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
+          echo "::set-output name=bearer_token::$BEARER_TOKEN"
+      - name: Get file list
+        uses: actions/download-artifact@v1
+        with:
+          name: seed-files
+      - name: Seed content to production
+        env:
+          LPB_HOST: "api.va.gov"
+          BEARER_TOKEN: ${{ steps.get_bearer_token.outputs.bearer_token }}
+        run:
+          for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
+          TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
+          SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
+          URL_STRING=`cat $n | 's/^.*url:\s*//'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer ${{ env.bearer_token }}"
+          --data "{\"date\":\"$DATE_STRING\",\"title\":\"$TITLE_STRING\",\"source\":\"$SOURCE_STRING\",\"url\":\"$URL_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items;
+          done;
+          for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
+          TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
+          URL_STRING=`cat $n | 's/^.*url:\s*//'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer ${{ env.bearer_token }}"
+          --data "{\"date\":\"$DATE_STRING\",\"title\":\"$TITLE_STRING\",\"url\":\"$URL_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/news/categories/$TARGET_NEWS_CATEGORY/items;
+          done;
