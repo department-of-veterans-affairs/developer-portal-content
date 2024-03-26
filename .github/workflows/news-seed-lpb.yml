@@ -66,7 +66,7 @@ jobs:
         run:
           for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
           SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
@@ -81,7 +81,7 @@ jobs:
           done;
           for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
           URL_STRING=`cat $n | 's/^.*url:\s*//'`;
@@ -133,7 +133,7 @@ jobs:
         run:
           for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
           SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
@@ -148,7 +148,7 @@ jobs:
           done;
           for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/'`;
           URL_STRING=`cat $n | 's/^.*url:\s*//'`;
