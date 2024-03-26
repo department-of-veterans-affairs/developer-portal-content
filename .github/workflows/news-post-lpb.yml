@@ -6,7 +6,7 @@ on:
       - synchronize
       - reopened
       - closed
-    branches: [api-22679-news]
+    branches: [main]
     paths:
       - "content/website/**"
 
