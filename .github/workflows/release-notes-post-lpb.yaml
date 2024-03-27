@@ -7,6 +7,8 @@ on:
       - reopened
       - closed
     branches: [main]
+    paths:
+      - "content/**"
     paths-ignore:
       - "content/website/**"
 
