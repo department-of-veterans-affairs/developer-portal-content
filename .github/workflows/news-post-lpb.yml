@@ -129,7 +129,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/about/news/).'
+              body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/about/news).'
             })
       - name: Previously Merged Warning Comment on PR
         if: needs.gather_content.outputs.rename_warning == 'TRUE'
@@ -215,5 +215,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: 'These changes have been pushed to [production](https://developer.va.gov/release-notes/).'
+              body: 'These changes have been pushed to [production](https://developer.va.gov/about/news).'
             })
