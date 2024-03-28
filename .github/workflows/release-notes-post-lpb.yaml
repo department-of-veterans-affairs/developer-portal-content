@@ -20,6 +20,11 @@ jobs:
       rename_warning: ${{ steps.get_target_environment.outputs.rename_warning }}
       target_environment: ${{ steps.get_target_environment.outputs.target_environment }}
     steps:
+      - name: Fail if branch is not main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"
+          exit 1
       - id: get_target_environment
         name: Determine Target Environment
         run: |

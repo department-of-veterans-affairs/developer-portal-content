@@ -12,6 +12,11 @@ jobs:
     name: Gather all content
     runs-on: ubuntu-latest
     steps:
+      - name: Fail if branch is not main
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"
+          exit 1
       - name: Checkout
         uses: actions/checkout@v2
         with:
