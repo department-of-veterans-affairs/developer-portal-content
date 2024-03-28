@@ -9,8 +9,7 @@ on:
     branches: [main]
     paths:
       - "content/**"
-    paths-ignore:
-      - "content/website/**"
+      - "!content/website/**"
 
 jobs:
   gather_content:
