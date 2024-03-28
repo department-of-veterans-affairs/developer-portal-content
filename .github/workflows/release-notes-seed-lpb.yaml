@@ -4,7 +4,7 @@ on:
     inputs:
       environment:
         description: "What environment are you seeding?"
-        required: true
+        required: false
         type: environment
 
 jobs:
@@ -12,11 +12,6 @@ jobs:
     name: Gather all content
     runs-on: ubuntu-latest
     steps:
-      - name: Fail if branch is not main
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "This workflow should not be triggered with workflow_dispatch on a branch other than main"
-          exit 1
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -26,6 +21,12 @@ jobs:
           find ./content -type f -not -path "./content/website/*" > seed-files.txt
           echo "All files to upload:"
           cat seed-files.txt
+      - name: Check if files were found
+        run: |
+          if [ ! -s "seed-files.txt" ]; then
+            echo "No files found!"
+            exit 1
+          fi
       - name: Save changed files list
         uses: actions/upload-artifact@v1
         with:
