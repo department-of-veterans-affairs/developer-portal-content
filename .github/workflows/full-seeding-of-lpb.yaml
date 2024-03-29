@@ -1,10 +1,10 @@
-name: Seed all news to Lighthouse Platform Backend (LPB)
+name: Seed all release notes to Lighthouse Platform Backend (LPB)
 on:
   workflow_dispatch:
     inputs:
       environment:
         description: "What environment are you seeding?"
-        required: false
+        required: true
         type: environment
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 0
       - name: Find files and artifact them
         run: |
-          find ./content/website -type f > seed-files.txt
+          find ./content -type f > seed-files.txt
           echo "All files to upload:"
           cat seed-files.txt
       - name: Check if files were found
@@ -70,9 +70,23 @@ jobs:
           LPB_HOST: "dev-api.va.gov"
           BEARER_TOKEN: ${{ steps.get_bearer_token.outputs.bearer_token }}
         run:
+          for n in `cat seed-files/seed-files.txt | grep content/ | grep -v 'content/website/'`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          CONTENT_STRING=`cat $n | base64 -w 0`;
+          TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer $BEARER_TOKEN"
+          --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
+          sleep 1;
+          done;
           for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
+          DATE_STRING=`echo $n | sed -E 's/([A-Za-z]+)-([0-9]{4}).*/\1 \2/'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/' | sed 's/^./\U&/;s/-/ /g'`;
           SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
@@ -87,7 +101,7 @@ jobs:
           done;
           for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
+          DATE_STRING=`echo $n | sed -E 's/([A-Za-z]+)-([0-9]{4}).*/\1 \2/'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/' | sed 's/^./\U&/;s/-/ /g'`;
           URL_STRING=`cat $n | 's/^.*url:\s*//'`;
@@ -137,9 +151,23 @@ jobs:
           LPB_HOST: "api.va.gov"
           BEARER_TOKEN: ${{ steps.get_bearer_token.outputs.bearer_token }}
         run:
+          for n in `cat seed-files/seed-files.txt | grep content/ | grep -v 'content/website/'`; do
+          echo "Posting $n to LPB";
+          DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
+          CONTENT_STRING=`cat $n | base64 -w 0`;
+          TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
+          echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+          curl
+          --request POST
+          --header 'Content-Type:application/json'
+          --header "Authorization:Bearer $BEARER_TOKEN"
+          --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}"
+          https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
+          sleep 1;
+          done;
           for n in `cat seed-files/seed-files.txt | grep 'content/website/news/articles/\|content/website/news/digital-media/'`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
+          DATE_STRING=`echo $n | sed -E 's/([A-Za-z]+)-([0-9]{4}).*/\1 \2/'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/' | sed 's/^./\U&/;s/-/ /g'`;
           SOURCE_STRING=`cat $n | 's/^.*source:\s*//'`;
@@ -154,7 +182,7 @@ jobs:
           done;
           for n in `cat changed-files/changed-files.txt | grep content/website/news/releases`; do
           echo "Posting $n to LPB";
-          DATE_STRING=`echo $n | 's/^.*date:\s*//'`;
+          DATE_STRING=`echo $n | sed -E 's/([A-Za-z]+)-([0-9]{4}).*/\1 \2/'`;
           TITLE_STRING=`cat $n | 's/^.*title:\s*//'`;
           TARGET_NEWS_CATEGORY=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/.*/\1/' | sed 's/^./\U&/;s/-/ /g'`;
           URL_STRING=`cat $n | 's/^.*url:\s*//'`;
