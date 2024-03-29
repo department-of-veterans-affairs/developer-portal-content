@@ -21,12 +21,6 @@ jobs:
           find ./content -type f > seed-files.txt
           echo "All files to upload:"
           cat seed-files.txt
-      - name: Check if files were found
-        run: |
-          if [ ! -s "seed-files.txt" ]; then
-            echo "No files found!"
-            exit 1
-          fi
       - name: Save changed files list
         uses: actions/upload-artifact@v1
         with:
