@@ -1,0 +1,1 @@
+In all FHIR resources of the Patient Health API, support for the `page` query parameter has been removed. Pagination is now using the a `-pageToken` parameter which is a system provided value in the response of all search requests.
