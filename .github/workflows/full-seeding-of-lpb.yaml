@@ -16,6 +16,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-next@v4
+        with:
+          node-version: 20
+
       - name: Find files and artifact them
         run: |
           find ./content -type f > seed-files.txt
@@ -39,6 +45,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-next@v4
+        with:
+          node-version: 20
+
       - name: NPM install
         run: npm ci
       - id: get_bearer_token
@@ -92,6 +104,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-next@v4
+        with:
+          node-version: 20
+
       - name: NPM install
         run: npm ci
       - id: get_bearer_token
