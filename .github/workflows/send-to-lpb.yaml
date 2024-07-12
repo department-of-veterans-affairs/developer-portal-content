@@ -68,6 +68,7 @@ jobs:
       - name: NPM install
         run: npm ci
       - id: get_bearer_token
+        if: github.actor != 'dependabot[bot]'
         name: Get Bearer Token
         env:
           LPB_HOST: 'dev-api.va.gov'
@@ -83,9 +84,11 @@ jobs:
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
       - name: Get file list
         uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
         with:
           name: changed-files
       - name: Send content to development
+        if: github.actor != 'dependabot[bot]'
         env:
           LPB_HOST: 'dev-api.va.gov'
         run:
@@ -104,6 +107,7 @@ jobs:
           done;
       - name: Comment on PR
         uses: actions/github-script@v7
+        if: github.actor != 'dependabot[bot]'
         with:
           script: |
             github.rest.issues.createComment({
@@ -113,8 +117,10 @@ jobs:
               body: 'These changes have been pushed to [dev](https://dev-developer.va.gov/release-notes/).'
             })
       - name: Previously Merged Warning Comment on PR
-        if: needs.gather_content.outputs.rename_warning == 'TRUE'
         uses: actions/github-script@v7
+        if: |
+          needs.gather_content.outputs.rename_warning == 'TRUE' &&
+          github.actor != 'dependabot[bot]'
         with:
           script: |
             github.rest.issues.createComment({
@@ -139,6 +145,7 @@ jobs:
       - name: NPM install
         run: npm ci
       - id: get_bearer_token
+        if: github.actor != 'dependabot[bot]'
         name: Get Bearer Token
         env:
           LPB_HOST: 'api.va.gov'
@@ -154,11 +161,13 @@ jobs:
           echo "bearer_token=$BEARER_TOKEN" >> $GITHUB_ENV;
       - name: Get file list
         uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
         with:
           name: changed-files
       - name: Send content to production
         env:
           LPB_HOST: 'api.va.gov'
+        if: github.actor != 'dependabot[bot]'
         run:
           for n in `cat changed-files/changed-files.txt | grep content/`; do
             echo "Posting $n to LPB";
@@ -175,6 +184,7 @@ jobs:
           done;
       - name: Comment on PR
         uses: actions/github-script@v7
+        if: github.actor != 'dependabot[bot]'
         with:
           script: |
             github.rest.issues.createComment({
