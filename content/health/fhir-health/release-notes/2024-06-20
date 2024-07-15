@@ -1,1 +1,1 @@
-We've removed support for the `page` query parameter in all FHIR resources of the Patient Health API. Pagination is now using the a `-pageToken` parameter which is a system provided value in the response of all search requests.
+The -pageToken query parameter is supported in some resources in the Patient Health API. The parameters have been updated in the PHAPI [documentation](https://developer.va.gov/explore/api/patient-health/docs?version=current) for resources that support this.
