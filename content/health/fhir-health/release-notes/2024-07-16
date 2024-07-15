@@ -1,1 +1,1 @@
-The -pageToken query parameter is supported in some resources in the Patient Health API. The parameters have been updated in the PHAPI [documentation](https://developer.va.gov/explore/api/patient-health/docs?version=current) for resources that support this.
+The -pageToken query parameter is supported by some resources in the Patient Health API. The [Patient Health API documentation](https://developer.va.gov/explore/api/patient-health/docs?version=current) has been updated to reflect this change.
