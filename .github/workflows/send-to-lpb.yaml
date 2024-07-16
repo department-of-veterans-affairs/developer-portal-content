@@ -92,7 +92,8 @@ jobs:
         env:
           LPB_HOST: 'dev-api.va.gov'
         run:
-          for n in `cat changed-files/changed-files.txt | grep content/`; do
+          ls -la;
+          for n in `cat changed-files.txt | grep content/`; do
             echo "Posting $n to LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
             CONTENT_STRING=`cat $n | base64 -w 0`;
