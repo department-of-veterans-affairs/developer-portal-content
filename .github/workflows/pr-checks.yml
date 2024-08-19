@@ -1,0 +1,58 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  codeql:
+    name: Run CodeQL Scan
+    runs-on: ubuntu-latest
+    concurrency: ${{ github.workflow }}-${{ matrix.language }}-${{ github.ref }}
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+            - javascript
+    steps:
+      - name: Run Code Scanning
+        uses: department-of-veterans-affairs/codeql-tools/codeql-analysis@main
+        with:
+          language: ${{ matrix.language }}
+
+  security:
+    name: NPM Audit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run NPM audit
+        run: npm audit --production --audit-level high
+
+  auto-merge:
+    name: Auto-Merge Dependabot PRs
+    needs: [codeql, security]
+    runs-on: ubuntu-latest
+    if: success() && github.actor == 'dependabot[bot]'
+    steps:
+      - name: Auto-merge PR
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge --auto --merge "$PR_URL"
