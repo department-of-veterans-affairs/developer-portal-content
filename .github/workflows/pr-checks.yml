@@ -55,8 +55,8 @@ jobs:
     runs-on: ubuntu-latest
     if: success() && github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
-      - name: Auto-merge PR
+      - name: Leave Comment for Dependabot Auto-Merge
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh pr merge --auto --merge "$PR_URL"
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_TOKEN: ${{ secrets.OKAPI_BOT_TOKEN }}
+        run: gh pr comment "$PR_NUMBER" --body "@dependabot squash and merge"
