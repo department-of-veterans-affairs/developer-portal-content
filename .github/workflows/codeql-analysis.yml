@@ -1,9 +1,7 @@
-name: CodeQL
+name: CodeQL Periodic Scans
 'on':
+  # See pr-checks.yml for PR checks. This workflow is for periodic scans and merges to main.
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
   schedule:
