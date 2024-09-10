@@ -19,4 +19,4 @@ This repo acts as an input source for the content of release notes for APIs on t
 
 ## More Resources
 
-- [Release Notes for APIs v2](https://community.max.gov/pages/viewpage.action?pageId=2284134044)
+- [Release Notes for APIs v2](https://confluence.devops.va.gov/pages/viewpage.action?pageId=48077289)
