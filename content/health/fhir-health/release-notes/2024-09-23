@@ -1,0 +1,1 @@
+The page query parameter has been deprecated and it has been replaced by the -pageToken query parameter in all Patient Health API resources. The [Patient Health API documentation](https://developer.va.gov/explore/api/patient-health/docs?version=current) has been updated to reflect this change. For full API functionality, the page_Token query parameter should be used. 
