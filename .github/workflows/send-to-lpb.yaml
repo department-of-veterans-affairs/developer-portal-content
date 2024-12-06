@@ -276,7 +276,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "The Marmosset Release Note alert failed in the Developer Portal Content repository."
+                    "text": "The Marmoset Release Note alert failed in the Developer Portal Content repository."
                   }
                 },
                 {
