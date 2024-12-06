@@ -233,58 +233,39 @@ jobs:
           echo "urls=${URLS}" >> $GITHUB_OUTPUT
       - name: Send Slack notification on success
         if: github.actor != 'dependabot[bot]' && success()
-        uses: slackapi/slack-github-action@v1.26.0
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          URLS: ${{ steps.get_urls_list.outputs.urls }}
+        uses: slackapi/slack-github-action@v2
         with:
-          # This ID is for #team-marmoset-alerts in Lighthouse Slack
-          channel-id: C02B97B1WUR
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            {
-              "text": "Developer Portal Content Update",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "A new release note has been posted to the developer portal. Please see the following links:"
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "$URLS"
-                  }
-                }
-              ]
-            }
+            # This ID is for #team-marmoset-alerts in Lighthouse Slack
+            channel: C02B97B1WUR
+            text: "Developer Portal Content Update"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "A new release note has been posted to the developer portal. Please see the following links:"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "${{ steps.get_urls_list.outputs.urls }}"
       - id: send_slack_failure_message
         if: github.actor != 'dependabot[bot]' && failure()
-        uses: slackapi/slack-github-action@v1.26.0
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        uses: slackapi/slack-github-action@v2
         with:
-          # This ID is for #team-okapi-alerts in Lighthouse Slack
-          channel-id: C05HL4MTAFR
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
-            {
-              "text": "Developer Portal Content Slack Notification Failure",
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "The Marmoset Release Note alert failed in the Developer Portal Content repository."
-                  }
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "@teamokapi please investigate."
-                  }
-                }
-              ]
-            }
+            # This ID is for #team-okapi-alerts in Lighthouse Slack
+            channel: C05HL4MTAFR
+            text: "Developer Portal Content Slack Notification Failure"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "The Marmoset Release Note alert failed in the Developer Portal Content repository."
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "@teamokapi please investigate."
