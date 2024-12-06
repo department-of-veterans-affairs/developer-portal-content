@@ -238,6 +238,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           URLS: ${{ steps.get_urls_list.outputs.urls }}
         with:
+          # This ID is for #team-marmoset-alerts in Lighthouse Slack
           channel-id: C02B97B1WUR
           payload: |
             {
