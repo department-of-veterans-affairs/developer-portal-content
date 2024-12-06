@@ -193,3 +193,97 @@ jobs:
               repo: context.repo.repo,
               body: 'These changes have been pushed to [production](https://developer.va.gov/).'
             })
+  send_notifications:
+    name: Send Slack notification for newly published release notes
+    needs: [gather_content, send_content_to_production]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Get file list
+        uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          name: changed-files
+      - id: get_urls_list
+        name: Get list of URLs with new release notes
+        if: github.actor != 'dependabot[bot]'
+        continue-on-error: true
+        run: |
+          # In practice this should only have a single API per merged
+          # release note but because there isn't a technical limitation
+          # that means it can't we need to build it to support multiples
+          
+          # Empty string of URLs with new release notes
+          URLS=""
+          
+          # Download legacy.json file so we can get the url_slugs
+          wget -O legacy.json https://developer.va.gov/platform-backend/v0/providers/transformations/legacy.json?environment=sandbox
+          
+          # Loop over the list of changed release note files
+          for n in `cat changed-files.txt | grep content/ | grep release-notes`; do
+            TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
+            TARGET_API_NAME=`jq -r ".[].apis[] | select(.altID==\"$TARGET_API\" or .urlSlug==\"$TARGET_API\") | .name" legacy.json`;
+            TARGET_URL_SLUG=`jq -r ".[].apis[] | select(.altID==\"$TARGET_API\" or .urlSlug==\"$TARGET_API\") | .urlSlug" legacy.json`;
+            URLS+="[$TARGET_API_NAME release notes](https://developer.va.gov/explore/api/$TARGET_URL_SLUG/release-notes)\n";
+          done
+          echo "URLs: $URLS"
+          echo "urls=${URLS}" >> $GITHUB_OUTPUT
+      - name: Send Slack notification on success
+        if: github.actor != 'dependabot[bot]' && success()
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          URLS: ${{ steps.get_urls_list.outputs.urls }}
+        with:
+          channel-id: C02B97B1WUR
+          payload: |
+            {
+              "text": "Developer Portal Content Update",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "A new release note has been posted to the developer portal. Please see the following links:"
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "$URLS"
+                  }
+                }
+              ]
+            }
+      - id: send_slack_failure_message
+        if: github.actor != 'dependabot[bot]' && failure()
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          # This ID is for #team-okapi-alerts in Lighthouse Slack
+          channel-id: C05HL4MTAFR
+          payload: |
+            {
+              "text": "Developer Portal Content Slack Notification Failure",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "The Marmosset Release Note alert failed in the Developer Portal Content repository."
+                  }
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "@teamokapi please investigate."
+                  }
+                }
+              ]
+            }
