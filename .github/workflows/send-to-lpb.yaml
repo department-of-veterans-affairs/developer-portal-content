@@ -88,7 +88,79 @@ jobs:
         with:
           name: changed-files
           path: changed-files.txt
-  
+
+      - name: TDV Get Changed Files
+        id: tdv_file_changes
+        run: |
+          # Get the changed files with status
+          git status --porcelain > tdv_file_changes.txt
+
+          # Collect files based on their status
+          echo "Added/Modified files:" > added_modified_files.txt
+          echo "Deleted files:" > deleted_files.txt
+          
+          while IFS= read -r line
+          do
+            status="${line:0:2}"
+            file="${line:3}"
+
+            case "$status" in
+              "A " | "M ")
+                echo "$file" >> added_modified_files.txt
+                ;;
+              "D ")
+                echo "$file" >> deleted_files.txt
+                ;;
+              "R "*)
+                # Handle renamed files (R statuses)
+                old_name="${line:3:$((${#line}-5))}"  # Extract old name; handle based on number of spaces
+                new_name="${line:$((${#line}-4))}"    # Extract new name
+                
+                echo "$old_name" >> deleted_files.txt
+                echo "$new_name" >> added_modified_files.txt
+                ;;
+              "RM")
+                # Handle renamed and modified files
+                old_name="${file% *}"  # Everything before the last space is the old name
+                new_name="${file#* }"   # Everything after the first space is the new name
+
+                echo "$old_name" >> deleted_files.txt
+                echo "$new_name" >> added_modified_files.txt
+                ;;
+            esac
+          done < tdv_file_changes.txt
+
+          # Output the results for debugging
+          echo "Added/Modified files:"
+          cat added_modified_files.txt
+          echo "Deleted files:"
+          cat deleted_files.txt
+
+      - name: Process Added/Modified Files
+        run: |
+          echo "Processing Added/Modified Files"
+          if [[ -s added_modified_files.txt ]]; then
+            while IFS= read -r file
+            do
+              echo "Processing $file"
+              # Custom logic for added/modified files
+            done < added_modified_files.txt
+          fi
+
+      - name: Process Deleted Files
+        run: |
+          echo "Processing Deleted Files"
+          if [[ -s deleted_files.txt ]]; then
+            while IFS= read -r file
+            do
+              echo "Deleting $file"
+              # Custom logic for deleted files
+            done < deleted_files.txt
+          fi
+
+
+
+
   #################################################
   send_content_to_development:
     name: Send content to development LPB
