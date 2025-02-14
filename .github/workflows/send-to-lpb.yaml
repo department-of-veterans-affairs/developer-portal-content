@@ -58,7 +58,7 @@ jobs:
           #
           # If it's a PR change from a space delimited list to one file per line
           echo "DEBUG: steps.pr_files.outputs.added_modified_renamed ..."
-          echo "DEBUG: -=> $( steps.pr_files.outputs.added_modified_renamed )"
+          echo "DEBUG: -=> ${{ steps.pr_files.outputs.added_modified_renamed }}"
           #
           if [ "${{ steps.pr_files.outputs.added_modified_renamed }}" != "" ]; then
             touch changed-files.txt
@@ -67,8 +67,12 @@ jobs:
             done
           fi
           #
-          echo "DEBUG: steps.pr_files.outputs.renamed ..."
-          echo "DEBUG: -=> $( steps.pr_files.outputs.renamed )"
+          echo "DEBUG: steps.pr_files ..."
+          echo "DEBUG: outputs  -=> ${{ steps.pr_files.outputs }}"
+          echo "DEBUG: added    -=> ${{ steps.pr_files.outputs.added }}"
+          echo "DEBUG: modified -=> ${{ steps.pr_files.outputs.modified }}"
+          echo "DEBUG: removed  -=> ${{ steps.pr_files.outputs.removed }}"
+          echo "DEBUG: renamed  -=> ${{ steps.pr_files.outputs.renamed }}"
           #
           # TODO: maybe put these renames into another file ???
           #       what about purely deleted ones?
