@@ -9,6 +9,11 @@ append_unique_existing_filepath() {
     var_name="$1"
     filepath="$2"
 
+    if [[ ! "$filepath" == content/* ]]; then
+        debug "Filepath is ignored: $filepath (does not start with 'content/')"
+        return
+    fi
+
     if [[ ! "$var_name" == deleted* && ! -e "$filepath" ]]; then
         debug "Filepath does not exist: $filepath"
         return
