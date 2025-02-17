@@ -11,6 +11,16 @@ debug() {
   [ "$DEBUG" = "true" ] && echo "[DEBUG] $@" >&2
 }
 
+
+error() {
+  echo "[ERROR] $@" >&2
+  exit 1
+}
+
+warning() {
+  echo "[WARN] $@" >&2
+}
+
 append_unique_existing_filepath() {
     var_name="$1"
     filepath="$2"
@@ -39,8 +49,7 @@ if git show-ref --quiet "refs/remotes/origin/main"; then
 elif git show-ref --quiet "refs/remotes/origin/master"; then
   TARGET_BRANCH="origin/master"
 else
-  echo "Neither origin/main nor origin/master found.  Please set TARGET_BRANCH manually and ensure you are on the feature branch."
-  exit 1
+  error "Neither origin/main nor origin/master found.  Please set TARGET_BRANCH manually and ensure you are on the feature branch."
 fi
 
 # Get the name of the current branch
@@ -48,8 +57,7 @@ CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Check if we are on a detached HEAD
 if [ "$CURRENT_BRANCH" = "HEAD" ]; then
-    echo "You are in a detached HEAD state. Please checkout a branch to continue."
-    exit 1
+    warn "You are in a detached HEAD state. Please checkout a branch to continue."
 fi
 
 debug "TARGET_BRANCH:  $TARGET_BRANCH"
@@ -67,7 +75,7 @@ fi
 # added or modified 
 changed_files=""
 
-# removed or renamed
+# removed or old_file in a renamed action
 deleted_files=""
 
 
@@ -81,7 +89,7 @@ for commit in $COMMITS; do
     status=$(echo "$line" | cut -c 1) # Get only the first character
 
     # Remove the status character and any following whitespace/tabs
-    file=$(echo "$line" | sed 's/^[A-Z][[:digit:]]*[[:space:]]*//')
+    file=$( echo "$line" | sed 's/^[A-Z]+[[:digit:]]*[[:space:]]*//' )
 
     case "$status" in
       R)
@@ -108,11 +116,8 @@ for commit in $COMMITS; do
   done <<< "$DIFF"  # Use here-string to avoid subshell
 done
 
-echo
-echo "changed_files=$changed_files"
-echo
-echo "deleted_files=$deleted_files"
-echo
+debug "changed_files=$changed_files"
+debug "deleted_files=$deleted_files"
 
 if [ -n "$changed_files" ]; then
     echo "$changed_files" | tr ':' '\n' > changed_files.txt
