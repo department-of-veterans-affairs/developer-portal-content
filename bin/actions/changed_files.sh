@@ -17,7 +17,7 @@ error() {
   exit 1
 }
 
-warning() {
+warn() {
   echo "[WARN] $@" >&2
 }
 
