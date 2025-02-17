@@ -89,7 +89,7 @@ for commit in $COMMITS; do
     status=$(echo "$line" | cut -c 1) # Get only the first character
 
     # Remove the status character and any following whitespace/tabs
-    file=$( echo "$line" | sed 's/^[A-Z]+[[:digit:]]*[[:space:]]*//' )
+    file=$( echo "$line" | sed 's/^[A-Z][[:digit:]]*[[:space:]]*//' )
 
     case "$status" in
       R)
