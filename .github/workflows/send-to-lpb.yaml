@@ -48,8 +48,9 @@ jobs:
           fetch-depth: 0
       
       - id: pr_files
-        uses: Ana06/get-changed-files@v2.3.0
-      
+        # uses: Ana06/get-changed-files@v2.3.0
+        run: DEBUG='true' sh bin/actions/changed_files.sh
+
       - id: upload_content
         name: Find files and send them
         continue-on-error: true
@@ -81,17 +82,23 @@ jobs:
             echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
           fi
           #
-          echo "Expected files changes:"
+          echo "Changed files:"
           cat changed-files.txt
+          #
+          echo "Deleted files:"
+          cat deleted-files.txt
+
       - name: Save changed files list
         uses: actions/upload-artifact@v4
         with:
           name: changed-files
           path: changed-files.txt
 
-      - name: TDV Get Changed Files
-        id: tdv_file_changes
-        run: sh bin/actions/changed_files.sh
+      - name: Save deleted files list
+        uses: actions/upload-artifact@v4
+        with:
+          name: deleted-files
+          path: deleted-files.txt
 
   #################################################
   send_content_to_development:

@@ -118,9 +118,9 @@ debug "changed_files=$changed_files"
 debug "deleted_files=$deleted_files"
 
 if [ -n "$changed_files" ]; then
-    echo "$changed_files" | tr ':' '\n' > changed_files.txt
+    echo "$changed_files" | tr ':' '\n' > changed-files.txt
 fi
 
 if [ -n "$deleted_files" ]; then
-    echo "$deleted_files" | tr ':' '\n' > deleted_files.txt
+    echo "$deleted_files" | tr ':' '\n' > deleted-files.txt
 fi
