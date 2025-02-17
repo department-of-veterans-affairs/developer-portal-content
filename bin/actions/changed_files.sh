@@ -11,7 +11,6 @@ debug() {
   [ "$DEBUG" = "true" ] && echo "[DEBUG] $@" >&2
 }
 
-
 error() {
   echo "[ERROR] $@" >&2
   exit 1
@@ -25,16 +24,16 @@ append_unique_existing_filepath() {
     var_name="$1"
     filepath="$2"
 
-    if [[ ! "$filepath" == content/* ]]; then
+    if [ "${filepath#content/}" = "$filepath" ]; then
         return
     fi
 
-    if [[ ! "$var_name" == deleted* && ! -e "$filepath" ]]; then
+    if [ "${var_name#deleted}" = "$var_name" ] && [ ! -e "$filepath" ]; then
         return
     fi
 
     current_value="$(eval "echo \$$var_name")"
-    
+
     if [ -z "$current_value" ]; then
         eval "$var_name=\"$filepath\""
     elif [ "$(echo "$current_value" | grep -c -w "$filepath")" -eq 0 ]; then
@@ -42,14 +41,13 @@ append_unique_existing_filepath() {
     fi
 }
 
-
 # Determine the base branch (main or master)
 if git show-ref --quiet "refs/remotes/origin/main"; then
   TARGET_BRANCH="origin/main"
 elif git show-ref --quiet "refs/remotes/origin/master"; then
   TARGET_BRANCH="origin/master"
 else
-  error "Neither origin/main nor origin/master found.  Please set TARGET_BRANCH manually and ensure you are on the feature branch."
+  error "Neither origin/main nor origin/master found. Please set TARGET_BRANCH manually and ensure you are on the feature branch."
 fi
 
 # Get the name of the current branch
@@ -62,7 +60,6 @@ fi
 
 debug "TARGET_BRANCH:  $TARGET_BRANCH"
 debug "CURRENT_BRANCH: $CURRENT_BRANCH"
-
 
 # Get the list of commits unique to the current branch.
 COMMITS=$(git rev-list --no-merges "$TARGET_BRANCH..$CURRENT_BRANCH")
@@ -77,7 +74,6 @@ changed_files=""
 
 # removed or old_file in a renamed action
 deleted_files=""
-
 
 # Iterate through each commit to detect renames and other changes
 for commit in $COMMITS; do
@@ -113,7 +109,9 @@ for commit in $COMMITS; do
         debug "== * == $file"
         ;;
     esac
-  done <<< "$DIFF"  # Use here-string to avoid subshell
+  done << EOF
+$DIFF
+EOF
 done
 
 debug "changed_files=$changed_files"
