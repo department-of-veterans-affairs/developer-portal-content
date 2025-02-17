@@ -158,8 +158,14 @@ jobs:
               --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}"
               https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
           done;
-      
-      - name: Send celeted files to development
+          
+      - name: Get deleted files list
+        uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          name: deleted-files
+
+      - name: Send deleted files to development
         if: github.actor != 'dependabot[bot]'
         env:
           LPB_HOST: 'dev-api.va.gov'
@@ -167,14 +173,13 @@ jobs:
           for n in `cat deleted-files.txt`; do
             echo "Deleting $n from LPB";
             DATE_STRING=`echo $n | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/'`;
-            CONTENT_STRING=`cat $n | base64 -w 0`;
             TARGET_API=`echo $n | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/'`;
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl
               --request DELETE
               --header 'Content-Type:application/json'
               --header "Authorization:Bearer ${{ env.bearer_token }}"
-              --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}"
+              --data "{\"date\":\"$DATE_STRING\"}"
               https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes;
           done;
       
