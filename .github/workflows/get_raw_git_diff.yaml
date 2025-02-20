@@ -27,8 +27,7 @@ jobs:
         id: diff
         run: |
           DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
-          echo "DIFF=$DIFF" >> $GITHUB_OUTPUT
-          echo "::set-output name=diff::$DIFF" # Deprecated method.  Use $GITHUB_OUTPUT instead.
+          echo "diff=$DIFF" >> "$GITHUB_OUTPUT"
 
       - name: Output Diff (Example)
         run: |
