@@ -52,6 +52,10 @@ jobs:
       ##############################
       ## Global git diff -raw main...
 
+      -- name: Dump Environment
+        run: sh bin/actions/dump_env.sh
+
+
       - name: Checkout Main Branch
         run: git checkout main
 
