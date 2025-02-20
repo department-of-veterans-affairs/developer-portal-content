@@ -1,0 +1,36 @@
+name: Get Raw Git Diff
+
+on:
+  pull_request: # or push, depending on when you need this
+
+jobs:
+  get_diff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Get full history (important for diffing)
+
+      - name: Checkout Main Branch
+        run: git checkout main
+
+      - name: Get Feature Branch Name
+        id: get-feature-branch
+        run: |
+          echo "FEATURE_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Check out Feature Branch
+        run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
+
+      - name: Get Raw Diff
+        id: diff
+        run: |
+          DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
+          echo "DIFF=$DIFF" >> $GITHUB_OUTPUT
+          echo "::set-output name=diff::$DIFF" # Deprecated method.  Use $GITHUB_OUTPUT instead.
+
+      - name: Output Diff (Example)
+        run: |
+          echo "Raw Diff:"
+          echo "${{ steps.diff.outputs.diff }}"
