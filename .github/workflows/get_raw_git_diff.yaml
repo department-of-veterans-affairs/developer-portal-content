@@ -29,9 +29,9 @@ jobs:
       # -- name: Dump Environment
       #   run: sh bin/actions/dump_env.sh
 
-      -- name: Dump Environment
-        run: |
-          sh bin/actions/dump_env.sh
+      # -- name: Dump Environment
+      #   run: |
+      #     sh bin/actions/dump_env.sh
 
       - name: Get Feature Branch Name
         id: get-feature-branch
