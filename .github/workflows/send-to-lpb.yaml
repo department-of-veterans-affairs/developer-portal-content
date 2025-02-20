@@ -49,6 +49,11 @@ jobs:
         with:
           fetch-depth: 0
       
+      ##############################
+      ## Global git diff -raw main...
+
+      - name: Checkout Main Branch
+        run: git checkout main
 
       - name: Get Feature Branch Name
         id: get-feature-branch
@@ -58,17 +63,15 @@ jobs:
       - name: Check out Feature Branch
         run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
 
-      - name: Get Raw Diff
-        id: diff
+      - name: Get Raw Diff and Write to File
         run: |
           DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
-          echo "DIFF=$DIFF" >> $GITHUB_OUTPUT
-          echo "::set-output name=diff::$DIFF" # Deprecated method.  Use $GITHUB_OUTPUT instead.
+          echo "$DIFF" > raw_diff.txt
 
-      - name: Output Diff (Example)
+      - name: Output Diff (Example - Read from File)
         run: |
-          echo "Raw Diff:"
-          echo "${{ steps.diff.outputs.diff }}"
+          echo "Raw Diff (from file):"
+          cat raw_diff.txt
 
 
 
