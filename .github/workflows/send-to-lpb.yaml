@@ -49,9 +49,33 @@ jobs:
         with:
           fetch-depth: 0
       
+
+      - name: Get Feature Branch Name
+        id: get-feature-branch
+        run: |
+          echo "FEATURE_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Check out Feature Branch
+        run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
+
+      - name: Get Raw Diff
+        id: diff
+        run: |
+          DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
+          echo "DIFF=$DIFF" >> $GITHUB_OUTPUT
+          echo "::set-output name=diff::$DIFF" # Deprecated method.  Use $GITHUB_OUTPUT instead.
+
+      - name: Output Diff (Example)
+        run: |
+          echo "Raw Diff:"
+          echo "${{ steps.diff.outputs.diff }}"
+
+
+
+      
       - id: pr_files
         # uses: Ana06/get-changed-files@v2.3.0
-        run: DEBUG='true' sh bin/actions/changed_files.sh
+        run: CF_DEBUG='true' sh bin/actions/changed_files.sh
 
       - id: upload_content
         name: Find files and send them
