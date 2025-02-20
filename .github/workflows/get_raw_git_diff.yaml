@@ -1,4 +1,4 @@
-name: Get Raw Git Diff
+name: Get Raw Git Diff and Write to File
 
 on:
   pull_request: # or push, depending on when you need this
@@ -23,18 +23,12 @@ jobs:
       - name: Check out Feature Branch
         run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
 
-      - name: Get Raw Diff
-        id: diff
+      - name: Get Raw Diff and Write to File
         run: |
           DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
-          echo
-          echo "git diff --raw base...feature"
-          echo "============================="
-          echo $DIFF
-          echo
-          echo "diff=$DIFF" >> "$GITHUB_OUTPUT"
+          echo "$DIFF" > raw_diff.txt
 
-      - name: Output Diff (Example)
+      - name: Output Diff (Example - Read from File)
         run: |
-          echo "Raw Diff:"
-          echo "${{ steps.diff.outputs.diff }}"
+          echo "Raw Diff (from file):"
+          cat raw_diff.txt
