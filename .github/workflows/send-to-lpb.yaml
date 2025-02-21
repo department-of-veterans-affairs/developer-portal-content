@@ -65,8 +65,8 @@ jobs:
 
       - name: Dump Environment
         run: |
-        chmod +x bin/actions/dump_env.sh
-        sh bin/actions/dump_env.sh
+          chmod +x bin/actions/dump_env.sh
+          sh bin/actions/dump_env.sh
 
       - name: Get Raw Diff and Write to File
         run: |
