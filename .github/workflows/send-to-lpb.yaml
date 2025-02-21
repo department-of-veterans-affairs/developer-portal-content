@@ -264,7 +264,7 @@ jobs:
         with:
           name: deleted-files
 
-      - name: Send deleted files to development
+      - name: Send deleted files to production
         if: github.actor != 'dependabot[bot]'
         env:
           LPB_HOST: 'api.va.gov'
@@ -294,7 +294,7 @@ jobs:
         with:
           name: changed-files
 
-      - name: Send content to production
+      - name: Send changed files to production
         env:
           LPB_HOST: 'api.va.gov'
         if: github.actor != 'dependabot[bot]'
