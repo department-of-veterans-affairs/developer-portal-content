@@ -58,11 +58,13 @@ while IFS= read -r line; do
     continue
   fi
 
-  parts=($line)
+  # Use IFS and read to split the line into fields.
+  IFS=' ' read -r _ _ _ _ status file1 file2 <<< "$line"
 
-  status="${parts[4]}"
-  file1="${parts[5]}"
-  file2="${parts[6]-}"
+  # Handle the case where file2 might not exist (empty).
+  if [ -z "$file2" ]; then
+      file2=""
+  fi
 
   case "$status" in
     R*)
