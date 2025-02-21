@@ -66,14 +66,14 @@ while IFS= read -r line; do
 
   case "$status" in
     R*)
-      deleted_files="$deleted_files:$file1"
-      changed_files="$changed_files:$file2"
+      [ "$file1" == "content/"* ] && deleted_files="$deleted_files:$file1"
+      [ "$file2" == "content/"* ] && changed_files="$changed_files:$file2"
       ;;
     A)
-      changed_files="$changed_files:$file1"
+      [ "$file1" == "content/"* ] && changed_files="$changed_files:$file1"
       ;;
     M)
-      changed_files="$changed_files:$file1"
+      [ "$file1" == "content/"* ] && changed_files="$changed_files:$file1"
       ;;
     D)
       deleted_files="$deleted_files:$file1"
