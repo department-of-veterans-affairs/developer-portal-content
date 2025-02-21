@@ -59,7 +59,16 @@ while IFS= read -r line; do
   fi
 
   # Use IFS and read to split the line into fields.
-  IFS=' ' read -r _ _ _ _ status file1 file2 <<< "$line"
+  # IFS=' ' read -r _ _ _ _ status file1 file2 <<< "$line"  # does not work
+
+  status=$(echo "$line" | awk '{print $5}')
+  file1=$(echo "$line" | awk '{print $6}')
+  file2=$(echo "$line" | awk '{print $7}')
+
+  debug "status: ($status)"
+  debug "file1: ($file1)"
+  debug "file2: ($file2)"
+
 
   # Handle the case where file2 might not exist (empty).
   if [ -z "$file2" ]; then
