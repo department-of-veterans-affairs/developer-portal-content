@@ -54,7 +54,7 @@ CF_DIFF=$(cat "$RAW_DIFF_FILE")
 while IFS= read -r line; do
   debug "line: ($line)"
 
-  if [ -z "$line" ] || [ "${line:0:1}" != ":" ]; then
+  if [ -z "$line" ] || [ "$(echo "$line" | cut -c1)" != ":" ]; then
     continue
   fi
 
