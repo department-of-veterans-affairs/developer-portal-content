@@ -63,11 +63,6 @@ jobs:
       - name: Check out Feature Branch
         run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
 
-      - name: Dump Environment
-        run: |
-          chmod +x bin/actions/dump_env.sh
-          sh bin/actions/dump_env.sh
-
       - name: Get Raw Diff and Write to File
         run: |
           DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})

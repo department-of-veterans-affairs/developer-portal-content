@@ -52,11 +52,13 @@ CF_DIFF=$(cat "$RAW_DIFF_FILE")
 
 # Process the provided CF_DIFF
 while IFS= read -r line; do
-  parts=($line)
+  debug "line: ($line)"
 
   if [ -z "$line" ] || [ "${line:0:1}" != ":" ]; then
     continue
   fi
+
+  parts=($line)
 
   status="${parts[4]}"
   file1="${parts[5]}"
