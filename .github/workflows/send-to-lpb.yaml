@@ -151,7 +151,7 @@ jobs:
           # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
           while IFS= read -r n; do
             echo "DEV: Deleting $n from LPB";
-            DATE_STRING=$(echo "$n" | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/');
+            DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
             TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl --request DELETE \
@@ -272,7 +272,7 @@ jobs:
           # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
           while IFS= read -r n; do
             echo "PROD: Deleting $n from LPB";
-            DATE_STRING=$(echo "$n" | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/');
+            DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
             TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
             echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             curl --request DELETE \
@@ -305,7 +305,7 @@ jobs:
             [ -r "$n" ] || continue
             if [[ "$n" == *'content/'* ]]; then
               echo "Posting $n to LPB";
-              DATE_STRING=$(echo "$n" | sed 's/[\/\.a-z\-]//g' | sed -E 's/([0-9]{4})([0-9]{2})([0-9]{2})/\1-\2-\3/');
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
               CONTENT_STRING=$(cat "$n" | base64 -w 0);
               TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
               echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
