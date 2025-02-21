@@ -1,6 +1,4 @@
 #!/bin/sh
-set -euo pipefail
-
 # File: bin/actions/changed_files.sh
 # Desc: identify all changed files between a feature branch
 #       and the origin.
@@ -66,14 +64,22 @@ while IFS= read -r line; do
 
   case "$status" in
     R*)
-      [ "$file1" == "content/"* ] && deleted_files="$deleted_files:$file1"
-      [ "$file2" == "content/"* ] && changed_files="$changed_files:$file2"
+      case "$file1" in
+        content/*) deleted_files="$deleted_files:$file1" ;;
+      esac
+      case "$file2" in
+        content/*) changed_files="$changed_files:$file2" ;;
+      esac
       ;;
     A)
-      [ "$file1" == "content/"* ] && changed_files="$changed_files:$file1"
+      case "$file1" in
+        content/*) changed_files="$changed_files:$file1" ;;
+      esac
       ;;
     M)
-      [ "$file1" == "content/"* ] && changed_files="$changed_files:$file1"
+      case "$file1" in
+        content/*) changed_files="$changed_files:$file1" ;;
+      esac
       ;;
     D)
       deleted_files="$deleted_files:$file1"
