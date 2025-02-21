@@ -16,11 +16,6 @@ jobs:
         run: git checkout ${GITHUB_BASE_REF} || git checkout main || git checkout master
         shell: bash
 
-      - name: Dump Environment
-        run: |
-          chmod +x bin/actions/dump_env.sh
-          sh bin/actions/dump_env.sh
-
       - name: Get Feature Branch Name
         id: get-feature-branch
         run: |
@@ -28,6 +23,11 @@ jobs:
 
       - name: Check out Feature Branch
         run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
+
+      - name: Dump Environment
+        run: |
+          chmod +x bin/actions/dump_env.sh
+          sh bin/actions/dump_env.sh
 
       - name: Get Raw Diff and Write to File
         run: |

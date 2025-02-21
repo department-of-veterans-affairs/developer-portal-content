@@ -52,10 +52,6 @@ jobs:
       ##############################
       ## Global git diff -raw main...
 
-      -- name: Dump Environment
-        run: sh bin/actions/dump_env.sh
-
-
       - name: Checkout Main Branch
         run: git checkout main
 
@@ -66,6 +62,11 @@ jobs:
 
       - name: Check out Feature Branch
         run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
+
+      - name: Dump Environment
+        run: |
+        chmod +x bin/actions/dump_env.sh
+        sh bin/actions/dump_env.sh
 
       - name: Get Raw Diff and Write to File
         run: |
@@ -82,7 +83,9 @@ jobs:
       
       - id: pr_files
         # uses: Ana06/get-changed-files@v2.3.0
-        run: CF_DEBUG='true' sh bin/actions/changed_files.sh
+        run: |
+          chmod +x bin/actions/changed_files.sh
+          CF_DEBUG='true' sh bin/actions/changed_files.sh
 
       - id: upload_content
         name: Find files and send them
