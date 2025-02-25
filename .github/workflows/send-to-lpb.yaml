@@ -155,7 +155,6 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         with:
           name: changed-files
-
       - name: Send content to development
         if: github.actor != 'dependabot[bot]'
         env:
