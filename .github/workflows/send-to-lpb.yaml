@@ -86,35 +86,42 @@ jobs:
             echo "${removed_file}"
           done
 
-          # old stuff follow ....
-          # If it's a PR change from a space delimited list to one file per line
-          # TDV: "input" looks like:
-
-          echo "DEBUG: steps.pr_files.outputs.added_modified_renamed ...."
-          echo "DEBUG: ${{ steps.pr_files.outputs.added_modified_renamed }}""
-          echo ""
-          echo "DEBUG: steps.pr_files.outputs.renamed ...."
-          echo "DEBUG: $( steps.pr_files.outputs.renamed "
-          echo ""
-
-          if [ "${{ steps.pr_files.outputs.added_modified_renamed }}" != "" ]; then
+          if [ "${{ steps.pr_files.outputs.added_modified }}" != "" ]; then
             touch changed-files.txt
-            for f in `echo "${{ steps.pr_files.outputs.added_modified_renamed }}"`; do
+            for f in `echo "${{ steps.pr_files.outputs.added_modified }}"`; do
               echo $f >> changed-files.txt
             done
           fi
 
+          if [ "${{ steps.pr_files.outputs.removed }}" != "" ]; then
+            touch removed-files.txt
+            for f in `echo "${{ steps.pr_files.outputs.removed }}"`; do
+              echo $f >> removed-files.txt
+            done
+          fi
+
+          # SMELL: may not be necessary
           if [ "${{ steps.pr_files.outputs.renamed }}" != "" ]; then
             echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
           fi
 
-          echo "Expected files changes:"
+          echo "These files were changed:"
           cat changed-files.txt
+          echo
+          echo "These files were removed:"
+          cat removed-files.txt
+
       - name: Save changed files list
         uses: actions/upload-artifact@v4
         with:
           name: changed-files
           path: changed-files.txt
+
+      - name: Save removed files list
+        uses: actions/upload-artifact@v4
+        with:
+          name: removed-files
+          path: removed-files.txt
 
   #####################################################
   send_content_to_development:
