@@ -60,10 +60,11 @@ jobs:
           echo
           echo "Added/Modified"
           echo "=============="
-          for added_modified_file in "${{ steps.pr_files.outputs.added_modified }}"; do
+          for added_modified_file in ${{ steps.pr_files.outputs.added_modified }}; do
             echo "${added_modified_file}"
           done
 
+          echo
           echo "Removed"
           echo "======="
           for removed_file in ${{ steps.pr_files.outputs.removed }}; do
