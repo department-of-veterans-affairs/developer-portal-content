@@ -1,4 +1,9 @@
 name: Post content to Lighthouse Platform Backend (LPB)
+
+# FIXME: Not sure where this should go ...
+permissions:
+  contents: read
+
 on:
 
   #####################################################
@@ -33,7 +38,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
       ###########################################################
+      ## TDV: working here ...
       - id: pr_files
         uses: hanseltimeindustries/get-changed-files@v1
         with:
@@ -47,6 +54,41 @@ jobs:
         name: Find files and send them
         continue-on-error: true
         run: |
+          echo "all"
+          echo "============="
+          for changed_file in ${{ steps.pr_files.outputs.all }}; do
+            echo "${changed_file}"
+          done
+          echo
+          echo "Added/Modified"
+          echo "=============="
+          for added_modified_file in "${{ steps.pr_files.outputs.added_modified }}"; do
+            echo "${added_modified_file}"
+          done
+          echo "Removed"
+          echo "======="
+          for removed_file in ${{ steps.pr_files.outputs.removed }}; do
+            echo "${removed_file}"
+          done
+          done
+          echo "Removed"
+          echo "======="
+          for removed_file in ${{ steps.pr_files.outputs.removed }}; do
+            echo "${removed_file}"
+          done
+          done
+          echo "Removed"
+          echo "======="
+          for removed_file in ${{ steps.pr_files.outputs.removed }}; do
+            echo "${removed_file}"
+          done
+          echo "Renamed (method not documented)"
+          echo "==============================="
+          for removed_file in ${{ steps.pr_files.outputs.renamed }}; do
+            echo "${removed_file}"
+          done
+
+          # old stuff follow ....
           # If it's a PR change from a space delimited list to one file per line
           # TDV: "input" looks like:
 
