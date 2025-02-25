@@ -56,33 +56,25 @@ jobs:
           for changed_file in ${{ steps.pr_files.outputs.all }}; do
             echo "${changed_file}"
           done
+
           echo
           echo "Added/Modified"
           echo "=============="
           for added_modified_file in "${{ steps.pr_files.outputs.added_modified }}"; do
             echo "${added_modified_file}"
           done
+
           echo "Removed"
           echo "======="
           for removed_file in ${{ steps.pr_files.outputs.removed }}; do
             echo "${removed_file}"
           done
-          done
-          echo "Removed"
-          echo "======="
-          for removed_file in ${{ steps.pr_files.outputs.removed }}; do
-            echo "${removed_file}"
-          done
-          done
-          echo "Removed"
-          echo "======="
-          for removed_file in ${{ steps.pr_files.outputs.removed }}; do
-            echo "${removed_file}"
-          done
+
+          echo
           echo "Renamed (method not documented)"
           echo "==============================="
-          for removed_file in ${{ steps.pr_files.outputs.renamed }}; do
-            echo "${removed_file}"
+          for renamed_file in ${{ steps.pr_files.outputs.renamed }}; do
+            echo "${renamed_file}"
           done
 
           if [ "${{ steps.pr_files.outputs.added_modified }}" != "" ]; then
@@ -104,8 +96,10 @@ jobs:
             echo "rename_warning=TRUE" >> $GITHUB_OUTPUT
           fi
 
+          echo
           echo "These files were changed:"
           cat changed-files.txt
+
           echo
           echo "These files were removed:"
           cat removed-files.txt
