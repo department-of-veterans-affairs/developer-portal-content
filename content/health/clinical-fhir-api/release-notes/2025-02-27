@@ -1,1 +1,1 @@
-We've added the intent and status query parameters to the MedicationRequest resource in order to comply with the [U.S. Core 5 standards](https://hl7.org/fhir/us/core/STU5/). 
+We've added the intent and status query parameters to the MedicationRequest resource to comply with the [U.S. Core 5 standards](https://hl7.org/fhir/us/core/STU5/). 
