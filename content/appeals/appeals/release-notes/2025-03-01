@@ -1,10 +1,11 @@
-Release of Appeals Status v1.
+Release of Appeals Status v1
 
 Appeals Status v1 includes the following changes:
 
-* Introduced API-specific scopes as a replacement for the broader OAuth scopes, for clearer, more granular permission control.
+* Introduced Oauth support for secure authentication and authorization in the API.
 * Updated response code for temporary service outages from 502 (Bad Gateway) to 503 (Service Unavailable) to better reflect service status.
 * Updated response code for authorization failures from 400 (Bad Request) to 403 (Forbidden) to more accurately reflect permission issues.
 * Improved existing 422 response to clearly indicate missing or invalid parameters.
 * Removed the header `X-VA-User`, as it had no functional impact.
+* Removed the header `X-VA-SSN`. It was replaced by the `icn` URL param, which is optional when using a veteran-scoped token and required when using a representative- or system-scoped token.
 * Clarified existing behavior by documenting previously undocumented `404 Not Found` response.
