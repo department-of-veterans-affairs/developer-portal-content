@@ -2,7 +2,7 @@ Release of Appeals Status v1
 
 Appeals Status v1 includes the following changes:
 
-* Introduced Oauth support for secure authentication and authorization in the API.
+* Introduced OAuth support for secure authentication and authorization in the API.
 * Updated response code for temporary service outages from 502 (Bad Gateway) to 503 (Service Unavailable) to better reflect service status.
 * Updated response code for authorization failures from 400 (Bad Request) to 403 (Forbidden) to more accurately reflect permission issues.
 * Improved existing 422 response to clearly indicate missing or invalid parameters.
