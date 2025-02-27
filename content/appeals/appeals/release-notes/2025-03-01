@@ -1,0 +1,10 @@
+Release of Appeals Status v1.
+
+Appeals Status v1 includes the following changes:
+
+* Introduced API-specific scopes as a replacement for the broader OAuth scopes, for clearer, more granular permission control.
+* Updated response code for temporary service outages from 502 (Bad Gateway) to 503 (Service Unavailable) to better reflect service status.
+* Updated response code for authorization failures from 400 (Bad Request) to 403 (Forbidden) to more accurately reflect permission issues.
+* Improved existing 422 response to clearly indicate missing or invalid parameters.
+* Removed the header `X-VA-User`, as it had no functional impact.
+* Clarified existing behavior by documenting previously undocumented `404 Not Found` response.
