@@ -83,7 +83,7 @@ jobs:
         run: |
           echo "Changed files:"
           cat changed-files.txt
-          #
+          echo ""
           echo "Deleted files:"
           cat deleted-files.txt
 
@@ -148,18 +148,25 @@ jobs:
         env:
           LPB_HOST: 'dev-api.va.gov'
         run: |
-          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
-          while IFS= read -r n; do
-            echo "DEV: Deleting $n from LPB";
-            DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-            TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
-            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            curl --request DELETE \
-                 --header 'Content-Type:application/json' \
-                 --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                 --data "{\"date\":\"$DATE_STRING\"}" \
-                 "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < deleted-files.txt
+          if [[ -s "deleted-files.txt" ]]; then
+            echo "" >> deleted-files.txt
+            echo "Deleted files:"
+            cat deleted-files.txt
+            # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+            while IFS= read -r n; do
+              echo "DEV: Deleting $n from LPB";
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request DELETE \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data "{\"date\":\"$DATE_STRING\"}" \
+                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            done < deleted-files.txt
+          else
+            echo 'No deleted files to process.'
+          fi
 
       #############################
       ##       Development       ##
@@ -177,22 +184,29 @@ jobs:
         env:
           LPB_HOST: 'dev-api.va.gov'
         run: |
-          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
-          while IFS= read -r n; do
-            # ignore the file if it does not exist or is not readable
-            [ -r "$n" ] || continue
+          if [[ -s "changed-files.txt" ]]; then
+            echo "" >> changed-files.txt
+            echo "Changed files:"
+            cat changed-files.txt
+            # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+            while IFS= read -r n; do
+              # ignore the file if it does not exist or is not readable
+              [ -r "$n" ] || continue
 
-            echo "Posting $n to LPB";
-            DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-            CONTENT_STRING=$(cat "$n" | base64 -w 0);
-            TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
-            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            curl --request POST \
-                 --header 'Content-Type:application/json' \
-                 --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                 --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
-                 "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < changed-files.txt
+              echo "Posting $n to LPB";
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              CONTENT_STRING=$(cat "$n" | base64 -w 0);
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request POST \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
+                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            done < changed-files.txt
+          else
+            echo 'No changed files to process.'
+          fi
 
       - name: Comment on PR
         uses: actions/github-script@v7
@@ -269,19 +283,25 @@ jobs:
         env:
           LPB_HOST: 'api.va.gov'
         run: |
-          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
-          while IFS= read -r n; do
-            echo "PROD: Deleting $n from LPB";
-            DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-            TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
-            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            curl --request DELETE \
-                 --header 'Content-Type:application/json' \
-                 --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                 --data "{\"date\":\"$DATE_STRING\"}" \
-                 "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < deleted-files.txt
-
+          if [[ -s "deleted-files.txt" ]]; then
+            echo "" >> deleted-files.txt
+            echo "Deleted files:"
+            cat deleted-files.txt
+            # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+            while IFS= read -r n; do
+              echo "PROD: Deleting $n from LPB";
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request DELETE \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data "{\"date\":\"$DATE_STRING\"}" \
+                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            done < deleted-files.txt
+          else
+            echo 'No deleted files to process.'
+          fi
 
       #############################
       ##       Production        ##
@@ -299,23 +319,30 @@ jobs:
           LPB_HOST: 'api.va.gov'
         if: github.actor != 'dependabot[bot]'
         run: |
-          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
-          while IFS= read -r n; do
-            # ignore the file if it does not exist or is not readable
-            [ -r "$n" ] || continue
-            if [[ "$n" == *'content/'* ]]; then
-              echo "Posting $n to LPB";
-              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
-              CONTENT_STRING=$(cat "$n" | base64 -w 0);
-              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
-              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-              curl --request POST \
-                  --header 'Content-Type:application/json' \
-                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                  --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
-                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            fi
-          done < changed-files.txt
+          if [[ -s "changed-files.txt" ]]; then
+            echo "" >> changed-files.txt
+            echo "Changed files:"
+            cat changed-files.txt
+            # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+            while IFS= read -r n; do
+              # ignore the file if it does not exist or is not readable
+              [ -r "$n" ] || continue
+              if [[ "$n" == *'content/'* ]]; then
+                echo "Posting $n to LPB";
+                DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}')
+                CONTENT_STRING=$(cat "$n" | base64 -w 0);
+                TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+                echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+                curl --request POST \
+                    --header 'Content-Type:application/json' \
+                    --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                    --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
+                    "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              fi
+            done < changed-files.txt
+          else
+            echo 'No changed files to process.'
+          fi
 
       - name: Comment on PR
         uses: actions/github-script@v7

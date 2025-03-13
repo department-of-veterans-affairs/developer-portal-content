@@ -113,5 +113,5 @@ debug "changed_files=$changed_files"
 debug "deleted_files=$deleted_files"
 
 # Convert colon-delimited paths to newlines
-echo "$changed_files" | tr ':' '\n' > changed-files.txt
-echo "$deleted_files" | tr ':' '\n' > deleted-files.txt
+printf "$changed_files" | tr ':' '\n' > changed-files.txt
+printf "$deleted_files" | tr ':' '\n' > deleted-files.txt
