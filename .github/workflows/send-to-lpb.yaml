@@ -83,7 +83,7 @@ jobs:
         run: |
           echo "Changed files:"
           cat changed-files.txt
-          #
+          echo ""
           echo "Deleted files:"
           cat deleted-files.txt
 
@@ -159,7 +159,7 @@ jobs:
                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
                  --data "{\"date\":\"$DATE_STRING\"}" \
                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < deleted-files/deleted-files.txt
+          done < deleted-files.txt
 
       #############################
       ##       Development       ##
@@ -177,8 +177,8 @@ jobs:
         env:
           LPB_HOST: 'dev-api.va.gov'
         run: |
-          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
-          while IFS= read -r n; do
+          echo changed-files.txt
+          for n in `cat changed-files.txt`; do
             # ignore the file if it does not exist or is not readable
             [ -r "$n" ] || continue
 
@@ -192,7 +192,7 @@ jobs:
                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
                  --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < changed-files/changed-files.txt
+          done
 
       - name: Comment on PR
         uses: actions/github-script@v7
