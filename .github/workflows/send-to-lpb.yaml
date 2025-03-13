@@ -159,7 +159,7 @@ jobs:
                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
                  --data "{\"date\":\"$DATE_STRING\"}" \
                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < deleted-files.txt
+          done < deleted-files/deleted-files.txt
 
       #############################
       ##       Development       ##
@@ -192,7 +192,7 @@ jobs:
                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
                  --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-          done < changed-files.txt
+          done < changed-files/changed-files.txt
 
       - name: Comment on PR
         uses: actions/github-script@v7
