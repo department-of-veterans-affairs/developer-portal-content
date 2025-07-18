@@ -32,8 +32,7 @@ jobs:
           gh version
 
           # Fetch open PRs with metadata
-          gh pr list --state open --json number,title,url,updatedAt \
-            | jq -c --arg cutoff "$THRESHOLD_DATE" '.[] | select(.updatedAt < $cutoff)' > all_stale_candidates.json
+          gh pr list --state open --json number,title,url,updatedAt | jq -c --arg cutoff "$THRESHOLD_DATE" '.[] | select(.updatedAt < $cutoff)' > all_stale_candidates.json
           
           # Prepare output
           echo "[]" > stale_prs.json
