@@ -21,7 +21,7 @@ jobs:
       - name: Fetch stale PRs
         id: stale_prs
         env:
-          GH_TOKEN: ${{ secrets.DEV_PORTAL_CONTENT_SECURITY_SCAN_WORKFLOW_TOKEN }}
+          GH_TOKEN: ${{ secrets.OKAPI_BOT_PR_STATUS_WORKFLOW }}
         run: |
           echo "Fetchin PRs older than 4 days with no updates and no approvals..."
 
@@ -43,7 +43,6 @@ jobs:
             UPDATED_AT=$(echo "$pr" | jq -r '.updatedAt')
 
             # Check if there's an approved review
-            echo "'/repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews'"
             REVIEWS=$(gh api '/repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews' --jq '[.[] | select(.state == "APPROVED")] | length')
 
             if [ "$REVIEWS" -eq 0 ]; then
