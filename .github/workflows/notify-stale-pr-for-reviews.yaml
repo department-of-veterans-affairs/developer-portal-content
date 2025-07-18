@@ -43,7 +43,7 @@ jobs:
             UPDATED_AT=$(echo "$pr" | jq -r '.updatedAt')
 
             # Check if there's an approved review
-            REVIEWS=$(gh pr review-list $PR_NUMBER --json state --jq '[.[] | select(.state == "APPROVED")] | length')
+            REVIEWS=$(gh api '/repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews' --jq '[.[] | select(.state == "APPROVED")] | length')
 
             if [ "$REVIEWS" -eq 0 ]; then
               echo "$pr" >> stale_prs.json
