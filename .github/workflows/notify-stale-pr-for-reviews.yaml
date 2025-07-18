@@ -27,6 +27,9 @@ jobs:
 
           THRESHOLD_DATE=$(date -u -d "4 days ago" +"%Y-%m-%dT%H:%M:%SZ")
           echo "Cutoff: $THRESHOLD_DATE"
+          
+          # check gh version
+          gh version
 
           # Fetch open PRs with metadata
           gh pr list --state open --json number,title,url,updatedAt \
