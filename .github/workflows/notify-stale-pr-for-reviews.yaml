@@ -13,6 +13,11 @@ jobs:
       pr_count: ${{ steps.stale_prs.outputs.pr_count }}
       slack_message: ${{ steps.format.outputs.slack_message }}
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Fetch stale PRs
         id: stale_prs
         env:
