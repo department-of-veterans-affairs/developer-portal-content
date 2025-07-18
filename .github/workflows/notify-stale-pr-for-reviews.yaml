@@ -21,7 +21,7 @@ jobs:
       - name: Fetch stale PRs
         id: stale_prs
         env:
-          GH_TOKEN: ${{ secrets.OKAPI_BOT_PR_STATUS_WORKFLOW }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "Fetchin PRs older than 4 days with no updates and no approvals..."
 
