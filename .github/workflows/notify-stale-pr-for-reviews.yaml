@@ -41,13 +41,13 @@ jobs:
           # Filter each candidate: skip if has APPROVED review
           cat all_stale_candidates.json | while read -r pr; do
             PR_NUMBER=$(echo "$pr" | jq -r '.number')
-            UPDATED_AT=$(ECHO "$pr" | jq -r '.updatedAt')
+            UPDATED_AT=$(echo "$pr" | jq -r '.updatedAt')
 
             # Check if there's an approved review
             REVIEWS=$(gh pr review-list $PR_NUMBER --json state --jq '[.[] | select(.state == "APPROVED")] | length')
 
             if [ "$REVIEWS" -eq 0 ]; then
-              ehco "$pr" >> stale_prs.json
+              echo "$pr" >> stale_prs.json
             fi
           done
 
