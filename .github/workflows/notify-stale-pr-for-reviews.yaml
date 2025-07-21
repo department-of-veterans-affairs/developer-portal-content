@@ -21,9 +21,9 @@ jobs:
       - name: Fetch stale PRs
         id: stale_prs
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.OKAPI_BOT_PR_STATUS_WORKFLOW }}
         run: |
-          echo "Fetchin PRs older than 4 days with no updates and no approvals..."
+          echo "Fetching PRs older than 4 days with no updates and no approvals..."
 
           THRESHOLD_DATE=$(date -u -d "4 days ago" +"%Y-%m-%dT%H:%M:%SZ")
           echo "Cutoff: $THRESHOLD_DATE"
