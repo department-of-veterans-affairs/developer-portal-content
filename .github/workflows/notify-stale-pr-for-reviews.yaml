@@ -1,0 +1,97 @@
+name: Notify Stale PRs for Reviews
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    # Weekdays at 7 AM EST
+    - cron: 0 12 * * 1-5
+
+jobs:
+  check_status_of_stale_prs:
+    runs-on: ubuntu-latest
+    outputs:
+      pr_count: ${{ steps.stale_prs.outputs.pr_count }}
+      slack_message: ${{ steps.format.outputs.slack_message }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch stale PRs
+        id: stale_prs
+        env:
+          GH_TOKEN: ${{ secrets.OKAPI_BOT_PR_STATUS_WORKFLOW }}
+        run: |
+          echo "Fetching PRs older than 4 days with no updates and no approvals..."
+
+          THRESHOLD_DATE=$(date -u -d "4 days ago" +"%Y-%m-%dT%H:%M:%SZ")
+          echo "Cutoff: $THRESHOLD_DATE"
+          
+          # check gh version
+          gh version
+
+          # Fetch open PRs with metadata
+          gh pr list --state open --json number,title,url,updatedAt | jq -c --arg cutoff "$THRESHOLD_DATE" '.[] | select(.updatedAt < $cutoff)' > all_stale_candidates.json
+          
+          # Prepare output
+          echo "[]" > stale_prs.json
+
+          # Filter each candidate: skip if has APPROVED review
+          cat all_stale_candidates.json | while read -r pr; do
+            PR_NUMBER=$(echo "$pr" | jq -r '.number')
+            UPDATED_AT=$(echo "$pr" | jq -r '.updatedAt')
+
+            # Check if there's an approved review
+            REVIEWS=$(gh api '/repos/${{ github.repository }}/pulls/$PR_NUMBER/reviews' --jq '[.[] | select(.state == "APPROVED")] | length')
+
+            if [ "$REVIEWS" -eq 0 ]; then
+              echo "$pr" >> stale_prs.json
+            fi
+          done
+
+          # Format JSON properly
+          jq -s . stale_prs.json > tmp.json && mv tmp.json stale_prs.json
+
+          # Output count
+          COUNT=$(jq length stale_prs.json)
+          echo "Found $COUNT PRs"
+          echo "pr_count=$COUNT" >> $GITHUB_OUTPUT
+
+      - name: Format PRs message
+        if: steps.stale_prs.outputs.pr_count != '0'
+        id: format
+        run: |
+          MSG="*There are ${{ steps.stale_prs.outputs.pr_count }} PR(s) with no activity in the last 4 days:*\n"
+          PR_LIST=$(jq -r '.[] | "- <\(.url)|\(.title)> (PR #\(.number))"' stale_prs.json)
+          echo "slack_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$MSG$PR_LIST" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+  send_slack_message:
+    runs-on: ubuntu-latest
+    needs: [check_status_of_stale_prs]
+    if: needs.check_status_of_stale_prs.outputs.pr_count != '0'
+    env:
+      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+    steps:
+      - id: send_slack_message
+        uses: slackapi/slack-github-action@v1.26.0
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        with:
+          # This ID is for #vaapi-ux-release-notes in Lighthouse Slack
+          channel-id: C03TPJWJ0E6
+          payload: |
+            {
+              "text": "${{ needs.check_status_of_stale_prs.outputs.slack_message }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "WIP: An alert about all open pull requests that haven't had any activity or review in the past 4 days."
+                  }
+                }
+              ]
+            }
