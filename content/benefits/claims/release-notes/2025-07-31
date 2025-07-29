@@ -1,0 +1,9 @@
+We added new v2 services that allow internal VA consumers to create, view, accept, and decline requests for appointing an accredited representative. This service supports claimants who choose to grant power of attorney to an accredited representative for the purpose of VA claims and appeals.
+
+This release includes the following new endpoints:
+* POST /veterans/{veteranId}/power-of-attorney-request
+* POST /veterans/power-of-attorney-requests
+* GET /veterans/power-of-attorney-requests/{id}
+* POST /veterans/power-of-attorney-requests/{id}/decide 
+
+To learn more, see the [Benefits Claims API v2 documentation](https://developer.va.gov/explore/api/benefits-claims/docs?version=v2).
