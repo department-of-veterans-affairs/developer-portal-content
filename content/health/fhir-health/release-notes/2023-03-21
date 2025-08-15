@@ -1,0 +1,1 @@
+Patient Health API consumers with Client Credentials Grant access will now be required to provide a launch patient. For more information, please refer to the "Retrieving an access token" section on the [Client Credentials Grant authorization page](https://developer.va.gov/explore/authorization/docs/client-credentials?api=fhir).
