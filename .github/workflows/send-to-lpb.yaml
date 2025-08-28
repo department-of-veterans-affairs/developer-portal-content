@@ -385,6 +385,8 @@ jobs:
           # Download legacy.json file so we can get the url_slugs
           wget -O legacy.json https://developer.va.gov/platform-backend/v0/providers/transformations/legacy.json?environment=sandbox
           
+          echo "" >> changed-files.txt
+          
           # Loop over the list of changed release note files
           # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
           while IFS= read -r n; do
