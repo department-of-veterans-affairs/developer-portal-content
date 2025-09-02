@@ -1,0 +1,1 @@
+We switched to a more efficient backend service for Veteran address validation. This service no longer fails when non-essential profile values (e.g., date of birth) are missing.
