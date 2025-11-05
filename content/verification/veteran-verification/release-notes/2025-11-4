@@ -1,2 +1,1 @@
-We’ve updated the OAS documentation to include detailed "not confirmed" reasons when a Veteran’s eligibility status cannot be verified. 
-This enhancement improves transparency and supports better error handling and user messaging in consuming applications
+We've added detailed reasons why "not confirmed" may be returned for a Veteran.
