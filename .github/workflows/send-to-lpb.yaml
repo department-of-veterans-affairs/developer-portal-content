@@ -162,6 +162,7 @@ jobs:
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
                   --data "{\"date\":\"$DATE_STRING\"}" \
+                  --fail-with-body \
                   "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             done < deleted-files.txt
           else
@@ -202,6 +203,7 @@ jobs:
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
                   --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
+                  --fail-with-body \
                   "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             done < changed-files.txt
           else
@@ -297,6 +299,7 @@ jobs:
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
                   --data "{\"date\":\"$DATE_STRING\"}" \
+                  --fail-with-body \
                   "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             done < deleted-files.txt
           else
@@ -337,6 +340,7 @@ jobs:
                     --header 'Content-Type:application/json' \
                     --header "Authorization:Bearer ${{ env.bearer_token }}" \
                     --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\"}" \
+                    --fail-with-body \
                     "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
               fi
             done < changed-files.txt
