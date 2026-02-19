@@ -1,0 +1,16 @@
+Version 1 of the Clinical Health API is now available in Sandbox for testing and integration. Production release target date is **March 2, 2026**.
+
+**Key Updates**:
+
+Authorization Provider Change:
+* The API now uses Microsoft Entra ID for internal authorization.
+* Entra ID replaces IAM SSOi as the authorization provider.
+* JWT tokens are issued without an introspection endpoint.
+
+Access Token Behavior:
+* Token lifespan is randomized between 60–90 minutes for enhanced security.
+* Access token lifetime is variable by design.
+
+Refresh Token Policy:
+* Refresh tokens expire 10 hours after issuance, regardless of usage.
+* This applies to both Sandbox and Production environments.
