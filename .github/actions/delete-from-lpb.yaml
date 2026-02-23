@@ -1,0 +1,33 @@
+name: "Delete from LPB"
+description: "Step to delete a release note from LPB"
+inputs:
+  lpb-host:
+    description: "Hostname for LPB instance"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Send deleted files to LPB
+      env:
+        LPB_HOST: ${{ inputs.lpb-host }}
+      run: |
+        if [[ -s "deleted-files.txt" ]]; then
+          echo "" >> deleted-files.txt
+          echo "Deleted files:"
+          cat deleted-files.txt
+          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+          while IFS= read -r n; do
+            echo "Deleting $n from LPB";
+            FILE_NAME=$(basename -- "$n")
+            TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            curl --request DELETE \
+                --header 'Content-Type:application/json' \
+                --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                --data "{\"file_name\":\"$FILE_NAME\"}" \
+                --fail-with-body \
+                "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+          done < deleted-files.txt
+        else
+          echo 'No deleted files to process.'
+        fi
