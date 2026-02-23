@@ -31,3 +31,4 @@ runs:
         else
           echo 'No deleted files to process.'
         fi
+      shell: bash
