@@ -60,7 +60,7 @@ jobs:
           echo "FEATURE_BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
 
       - name: Check out Feature Branch
-        run: git checkout ${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}
+        run: git checkout "${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}"
 
       - name: Get Raw Diff and Write to File
         run: |
