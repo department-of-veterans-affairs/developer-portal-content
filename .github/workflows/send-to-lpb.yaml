@@ -64,7 +64,7 @@ jobs:
 
       - name: Get Raw Diff and Write to File
         run: |
-          DIFF=$(git diff --raw main...${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }})
+          DIFF=$(git diff --raw main..."${{ steps.get-feature-branch.outputs.FEATURE_BRANCH }}")
           echo "$DIFF" > raw_diff.txt
 
       - name: Output Diff (Example - Read from File)
