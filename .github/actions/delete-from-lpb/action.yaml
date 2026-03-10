@@ -17,16 +17,25 @@ runs:
           cat deleted-files.txt
           # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
           while IFS= read -r n; do
-            echo "Deleting $n from LPB";
-            FILE_NAME=$(basename -- "$n")
-            TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
-            echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
-            curl --request DELETE \
-                --header 'Content-Type:application/json' \
-                --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                --data "{\"file_name\":\"$FILE_NAME\"}" \
-                --fail-with-body \
-                "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            echo "$n"
+            if [[ "$n" == *'content/'* ]]; then
+              echo "Deleting $n from LPB";
+              FILE_NAME=$(basename -- "$n")
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              if [[ -z "$DATE_STRING" ]];then
+                DATA="{\"file_name\":\"$FILE_NAME\"}" 
+              else 
+                DATA="{\"date\":\"$DATE_STRING\",\"file_name\":\"$FILE_NAME\"}"
+              fi
+              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request DELETE \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data $DATA \
+                  --fail-with-body \
+                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+            fi
           done < deleted-files.txt
         else
           echo 'No deleted files to process.'

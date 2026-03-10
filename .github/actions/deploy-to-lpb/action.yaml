@@ -22,14 +22,19 @@ runs:
             if [[ "$n" == *'content/'* ]]; then
               echo "Posting $n to LPB";
               FILE_NAME=$(basename -- "$n")
-              DATE_STRING=$(printf '%(%Y-%m-%d)T\n')
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
               CONTENT_STRING=$(cat "$n" | base64 -w 0);
               TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              if [[ -z "$DATE_STRING" ]];then
+                DATA="{\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}" 
+              else 
+                DATA="{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}"
+              fi
               echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
               curl --request POST \
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                  --data "{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}" \
+                  --data $DATA \
                   --fail-with-body \
                   "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
             fi
