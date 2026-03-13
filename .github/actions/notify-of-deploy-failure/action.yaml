@@ -1,0 +1,32 @@
+name: "Notify of release note deployment failure"
+description: "Step to send slack notification when a release note fails to deploy"
+inputs:
+  deploy_env:
+    description: "Deployment environment"
+    required: true
+  slack_token:
+    description: "Token for Slack"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Alert of failed ${{ inputs.deploy_env }} deployment
+      env:
+        DEPLOY_ENV: ${{ inputs.deploy_env }}
+      uses: slackapi/slack-github-action@v2
+      with:
+        method: chat.postMessage
+        token: ${{ inputs.slack_token }}
+        payload: |
+          # This ID is for #team-okapi-alerts in Lighthouse Slack
+          channel: C05HL4MTAFR
+          text: "Developer Portal Content Deployment Failure"
+          blocks:
+            - type: "section"
+              text:
+                type: "mrkdwn"
+                text: "A release note deployment to $DEPLOY_ENV has failed."
+            - type: "section"
+              text:
+                type: "mrkdwn"
+                text: "@team_okapi please investigate: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
