@@ -1,0 +1,1 @@
+Access to this API has been temporarily restricted to VA developers. Third‑party developers can't currently retrieve a Veteran’s Integrated Control Number (ICN), which this API requires as its primary parameter. Full access will be restored once external ICN access is available.
