@@ -1,3 +1,1 @@
-We've added a HealthCareSystem object that supports health type facilities:
-
-- This indicates the name of the VA regional system each facility belongs to.
+We added the `HealthCareSystem` object to the VA Facilities API. This field shows the name of the regional VA Health Care System (HCS) each facility belongs to.
