@@ -1,7 +1,7 @@
 name: "Deploy to LPB"
 description: "Step to deploy a release note to LPB"
 inputs:
-  lpb-host:
+  lpb-uri-base:
     description: "Hostname for LPB instance"
     required: true
 runs:
@@ -9,7 +9,7 @@ runs:
   steps:
     - name: Send changed files to LPB
       env:
-        LPB_HOST: ${{ inputs.lpb-host }}
+        LPB_URI_BASE: ${{ inputs.lpb-uri-base }}
       run: |
         if [[ -s "changed-files.txt" ]]; then
           echo "" >> changed-files.txt
@@ -30,13 +30,13 @@ runs:
               else 
                 DATA="{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}"
               fi
-              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              echo "Target URL $LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
               curl --request POST \
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                  --data $DATA \
+                  --data "$DATA" \
                   --fail-with-body \
-                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+                  "$LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
             fi
           done < changed-files.txt
         else

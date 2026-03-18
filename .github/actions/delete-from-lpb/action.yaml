@@ -1,7 +1,7 @@
 name: "Delete from LPB"
 description: "Step to delete a release note from LPB"
 inputs:
-  lpb-host:
+  lpb-uri-base:
     description: "Hostname for LPB instance"
     required: true
 runs:
@@ -9,7 +9,7 @@ runs:
   steps:
     - name: Send deleted files to LPB
       env:
-        LPB_HOST: ${{ inputs.lpb-host }}
+        LPB_URI_BASE: ${{ inputs.lpb-uri-base }}
       run: |
         if [[ -s "deleted-files.txt" ]]; then
           echo "" >> deleted-files.txt
@@ -17,7 +17,6 @@ runs:
           cat deleted-files.txt
           # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
           while IFS= read -r n; do
-            echo "$n"
             if [[ "$n" == *'content/'* ]]; then
               echo "Deleting $n from LPB";
               FILE_NAME=$(basename -- "$n")
@@ -28,13 +27,13 @@ runs:
               else 
                 DATA="{\"date\":\"$DATE_STRING\",\"file_name\":\"$FILE_NAME\"}"
               fi
-              echo "Target URL https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+              echo "Target URL $LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
               curl --request DELETE \
                   --header 'Content-Type:application/json' \
                   --header "Authorization:Bearer ${{ env.bearer_token }}" \
-                  --data $DATA \
+                  --data "$DATA" \
                   --fail-with-body \
-                  "https://$LPB_HOST/internal/platform-backend/v0/providers/$TARGET_API/release-notes";
+                  "$LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
             fi
           done < deleted-files.txt
         else
