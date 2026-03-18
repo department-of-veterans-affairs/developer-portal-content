@@ -1,0 +1,42 @@
+name: "Delete from LPB"
+description: "Step to delete a release note from LPB"
+inputs:
+  lpb-uri-base:
+    description: "Hostname for LPB instance"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Send deleted files to LPB
+      env:
+        LPB_URI_BASE: ${{ inputs.lpb-uri-base }}
+      run: |
+        if [[ -s "deleted-files.txt" ]]; then
+          echo "" >> deleted-files.txt
+          echo "Deleted files:"
+          cat deleted-files.txt
+          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+          while IFS= read -r n; do
+            if [[ "$n" == *'content/'* ]]; then
+              echo "Deleting $n from LPB";
+              FILE_NAME=$(basename -- "$n")
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              if [[ -z "$DATE_STRING" ]];then
+                DATA="{\"file_name\":\"$FILE_NAME\"}" 
+              else 
+                DATA="{\"date\":\"$DATE_STRING\",\"file_name\":\"$FILE_NAME\"}"
+              fi
+              echo "Target URL $LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request DELETE \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data "$DATA" \
+                  --fail-with-body \
+                  "$LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
+            fi
+          done < deleted-files.txt
+        else
+          echo 'No deleted files to process.'
+        fi
+      shell: bash

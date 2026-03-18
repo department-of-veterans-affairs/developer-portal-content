@@ -1,0 +1,45 @@
+name: "Deploy to LPB"
+description: "Step to deploy a release note to LPB"
+inputs:
+  lpb-uri-base:
+    description: "Hostname for LPB instance"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Send changed files to LPB
+      env:
+        LPB_URI_BASE: ${{ inputs.lpb-uri-base }}
+      run: |
+        if [[ -s "changed-files.txt" ]]; then
+          echo "" >> changed-files.txt
+          echo "Changed files:"
+          cat changed-files.txt
+          # SAFE WAY TO ITERATE LINES - Handles spaces in filenames
+          while IFS= read -r n; do
+            # ignore the file if it does not exist or is not readable
+            [ -r "$n" ] || continue
+            if [[ "$n" == *'content/'* ]]; then
+              echo "Posting $n to LPB";
+              FILE_NAME=$(basename -- "$n")
+              DATE_STRING=$(basename -- "$n" | grep -oE '[0-9]{4}-[0-9]{2}-[0-9]{2}' || echo "")
+              CONTENT_STRING=$(cat "$n" | base64 -w 0);
+              TARGET_API=$(echo "$n" | sed -E 's/.*\/([a-z\-]{1,})\/release-notes.*/\1/');
+              if [[ -z "$DATE_STRING" ]];then
+                DATA="{\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}" 
+              else 
+                DATA="{\"date\":\"$DATE_STRING\",\"content\":\"base64:$CONTENT_STRING\",\"file_name\":\"$FILE_NAME\"}"
+              fi
+              echo "Target URL $LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
+              curl --request POST \
+                  --header 'Content-Type:application/json' \
+                  --header "Authorization:Bearer ${{ env.bearer_token }}" \
+                  --data "$DATA" \
+                  --fail-with-body \
+                  "$LPB_URI_BASE/platform-backend/v0/providers/$TARGET_API/release-notes";
+            fi
+          done < changed-files.txt
+        else
+          echo 'No changed files to process.'
+        fi
+      shell: bash

@@ -9,7 +9,7 @@ This repo acts as an input source for the content of release notes for APIs on t
 1. New content is added in a folder structure that matches an expected pattern per each API.
 2. A pull request gets created by the person requesting the new release note.
 3. Pull requests, and update commits to those PRs, push proposed changes to [dev](https://dev-developer.va.gov) to allow visual testing.
-4. Upon PR approval and merge to `main` a GitHub Action will push the content to the Lighthouse Platform Backend (LPB) which will update the content pulled into the developer portal.
+4. Upon PR approval and merge to `main` a GitHub Action will push the content to the Lighthouse Platform Backend (LPB) which will update the content pulled into the production instance of [developer portal](https://developer.va.gov).
 
 ### Responsible parties
 
