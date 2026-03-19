@@ -15,6 +15,8 @@ name: Post content to Lighthouse Platform Backend (LPB)
 #       that they could delete an existing release note and
 #       add a new release note with the same name or date.
 
+# Run locally with Act for testing: act --artifact-server-path /tmp/artifacts --env GITHUB_HEAD_REF=$(git branch --show-current) --var ACT=true pull_request -W .github/workflows/send-to-lpb.yaml 
+
 on:
   pull_request:
     types:
@@ -99,9 +101,51 @@ jobs:
           name: deleted-files
           path: deleted-files.txt
 
+  send_content_to_local:
+    name: Send content to local LPB
+    needs: [gather_content]
+    if: ${{ vars.ACT == 'true' }}
+    environment:
+      name: local
+      url: http://localhost:8080
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: NPM install
+        run: npm ci
+
+      - name: Get deleted files list
+        uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          name: deleted-files
+
+      - name: Send deleted files to local
+        if: github.actor != 'dependabot[bot]'
+        uses: ./.github/actions/delete-from-lpb
+        with:
+          lpb-uri-base: 'http://localhost:8080'
+        
+      - name: Get changed files list
+        uses: actions/download-artifact@v4
+        if: github.actor != 'dependabot[bot]'
+        with:
+          name: changed-files
+
+      - name: Send changed content to local
+        if: github.actor != 'dependabot[bot]'
+        uses: ./.github/actions/deploy-to-lpb
+        with:
+          lpb-uri-base: 'http://localhost:8080'
+
   send_content_to_development:
     name: Send content to development LPB
     needs: [gather_content]
+    if: ${{ vars.ACT != 'true'}}
     environment:
       name: development
       url: https://dev-developer.va.gov
@@ -146,7 +190,7 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/delete-from-lpb
         with:
-          lpb-host: 'dev-api.va.gov'
+          lpb-uri-base: 'https://dev-api.va.gov/internal'
         
       #############################
       ##       Development       ##
@@ -163,7 +207,7 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/deploy-to-lpb
         with:
-          lpb-host: 'dev-api.va.gov'
+          lpb-uri-base: 'https://dev-api.va.gov/internal'
 
       - name: Comment on PR
         uses: actions/github-script@v7
@@ -191,6 +235,13 @@ jobs:
               body: 'If this release note was merged to the `main` branch on another PR, you will need to reach out to [Team Okapi](https://lighthouseva.slack.com/archives/C01931CFMTQ) to remove the copy that remains on the previous date.'
             })
 
+      - name: Notify on failure
+        if: failure()
+        uses: ./.github/actions/notify-of-deploy-failure
+        with:
+          deploy_env: DEV
+          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
+
   send_content_to_production:
     name: Send content to production LPB
     needs: [gather_content]
@@ -198,7 +249,7 @@ jobs:
       name: production
       url: https://developer.va.gov
     runs-on: ubuntu-latest
-    if: needs.gather_content.outputs.target_environment == 'production'
+    if: needs.gather_content.outputs.target_environment == 'production' && vars.ACT != 'true'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -239,7 +290,7 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/delete-from-lpb
         with:
-          lpb-host: 'api.va.gov'
+          lpb-uri-base: 'https://api.va.gov/internal'
 
       #############################
       ##       Production        ##
@@ -256,7 +307,7 @@ jobs:
         if: github.actor != 'dependabot[bot]'
         uses: ./.github/actions/deploy-to-lpb
         with:
-          lpb-host: 'api.va.gov'
+          lpb-uri-base: 'https://api.va.gov/internal'
 
       - name: Comment on PR
         uses: actions/github-script@v7
@@ -269,6 +320,13 @@ jobs:
               repo: context.repo.repo,
               body: 'These changes have been pushed to [production](https://developer.va.gov/).'
             })
+
+      - name: Notify on failure
+        if: failure()
+        uses: ./.github/actions/notify-of-deploy-failure
+        with:
+          deploy_env: PRODUCTION
+          slack_token: ${{ secrets.SLACK_BOT_TOKEN }}
 
   send_notifications:
     name: Send Slack notification for newly published release notes
