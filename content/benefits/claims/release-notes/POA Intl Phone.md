@@ -1,3 +1,3 @@
 We updated version 2 of the Benefits Claims API to accept international phone numbers for Veterans submitting a Power of Attorney (POA) request. This update makes it easier for Veterans living outside the U.S. to choose a representative who can manage claims on their behalf.
 
-To enable this change, we added an optional `countryCode` attribute to the POA request endpoint: POST /veterans/{veteranId}/power-of-attorney-request. If `countryCode` is omitted, the API will treat the entry as a U.S. phone number. 
+To enable this change, we added an optional `countryCode` attribute to the POA request endpoint: POST /veterans/{veteranId}/power-of-attorney-request. If `countryCode` is omitted, the API will treat the entry as a U.S. phone number.
