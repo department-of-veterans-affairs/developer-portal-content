@@ -8,4 +8,5 @@ We’re deprecating these versions because v3 of the Address Validation API is a
 - Renamed **GET /cityStateProvince** to **GET /locality** to better reflect the endpoint’s capabilities
 - Removed support in the **POST /validate** and **POST /candidate endpoints** for identifying which US Congressional District an address belongs to
 - Added support in the **POST /validate** and **POST /candidate endpoints** for country codes defined by the International Standards Organization (ISO) and Federal Information Processing Standards (FIPS)
-To learn more, review the [Address Validation API v3 documentation.](https://developer.va.gov/explore/api/address-validation/docs?version=current)
+
+To learn more, review the [Address Validation API v3 documentation](https://developer.va.gov/explore/api/address-validation/docs?version=current).
